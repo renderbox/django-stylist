@@ -1,5 +1,4 @@
-# name: Stylist CI
-
+name: Stylist CI
 
 on:
   push:

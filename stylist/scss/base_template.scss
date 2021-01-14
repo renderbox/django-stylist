@@ -123,3 +123,465 @@ hr {
     margin-top: $hr-margin-top;
     margin-bottom: $hr-margin-bottom;
 }
+
+h1:lang(en),
+h2:lang(en),
+h4:lang(en)
+{
+    text-transform: uppercase;
+}
+
+
+// Custom classes
+
+.alert {
+    z-index: 1000;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient($primary, $primarygradientend);
+}
+
+.bg-gradient-dark-horizontal {
+    background: linear-gradient(93deg, $dark, $darkgradientend);
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(334deg, $dark, $darkgradientend);
+}
+
+.bg-gradient-accent {
+    background: linear-gradient($accent, $accentgradientend);
+}
+
+.bg-light-75 {
+    background: $light-75;
+}
+
+.bg-login-transparent {
+    background: rgba(240, 240, 240, 0.75);
+}
+
+.bg-nav-links-off-transparent {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.bg-overlay {
+    background: rgba(16, 28, 51, 0.5);
+}
+
+.bg-accenthover {
+    background: $accenthover;
+}
+
+.blur {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+@media (min-width: 768px) {
+    .blur-md-none {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+}
+
+.bootstrap-select > .dropdown-toggle.bs-placeholder,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:hover,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:focus,
+.bootstrap-select > .dropdown-toggle.bs-placeholder:active {
+    color: $muted;
+    font-style: italic;
+}
+
+.border-bottom-white-50 {
+    border-bottom: 1px solid $white-50;
+}
+
+.border-top-white-50 {
+    border-top: 1px solid $white-50;
+}
+
+:not(.btn-group) > .btn:not(.dropdown-toggle):not([data-toggle="popover"]) {
+    font-size: $button-font-size;
+    font-weight: bold;
+    letter-spacing: -0.23px;
+    border-radius: 1.67em;
+    padding: 1em 2em;
+}
+
+.btn.dropdown-toggle {
+    border-radius: 2px;
+}
+
+.btn-floating {
+    opacity: 80%;
+    padding: 1em !important;
+}
+
+.btn-floating.btn-outline-primary {
+    background: white;
+}
+
+.btn-group>.btn:not(:last-child)
+{
+    margin-right: 2px;
+}
+
+.btn-group > .btn:first-child {
+    border-top-left-radius: 1.67em;
+    border-bottom-left-radius: 1.67em;
+}
+
+.btn-group > .btn:last-child {
+    border-top-right-radius: 1.67em;
+    border-bottom-right-radius: 1.67em;
+}
+
+.btn-group > .btn {
+    padding: 0.125rem 1rem;
+}
+
+.btn-outline-primary:not(.disabled):hover {
+    background: $hover2;
+    color: $primary;
+}
+
+.btn-primary {
+    color: $white;
+}
+
+.btn-square {
+    border-radius: 2px !important;
+    padding: 0.5em 0.7em !important;
+}
+
+.btn-text-primary {
+    color: $primary;
+    padding: 0 !important;
+    border-radius: 2px;
+}
+
+.btn-text-primary:hover {
+    color: $hover;
+}
+
+.btn-text-primary.disabled:hover {
+    color: $primary;
+}
+
+button svg {
+    font-size: 1rem;
+}
+
+.custom-control-input:focus ~ .custom-control-label::before,
+.custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border: none;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem $secondary;
+}
+
+.custom-control-input ~ .custom-control-label::before,
+.multiselect-container li .custom-checkbox .custom-control-label::before {
+    background-color: $light;
+    border-color: $muted;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before,
+.custom-checkbox .custom-control-input:indeterminate ~ .custom-control-label::before,
+.multiselect-container li.active .custom-checkbox .custom-control-label::before
+{
+    color: $white;
+    border-color: $success;
+    background-color: $success;
+}
+
+.custom-control-input[disabled] ~ .custom-control-label::after,
+.custom-control-input:disabled ~ .custom-control-label::after
+{
+    opacity: 66%;
+}
+
+.custom-control-input[disabled] ~ .custom-control-label::before,
+.custom-control-input:disabled ~ .custom-control-label::before {
+    background-color: $light;
+    opacity: 66%;
+}
+
+.custom-control-input[disabled] ~ .custom-control-label,
+.custom-control-input:disabled ~ .custom-control-label
+{
+    color: $dark;
+    opacity: 35%;
+}
+
+.dropdown-item {
+    padding: 0.25rem 1rem;
+}
+
+.dropdown-menu .arrow:after,
+.dropdown-menu .arrow:before {
+  bottom: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.dropdown-menu-right[x-placement^=bottom] .arrow:after {
+  border-bottom-color: $white;
+  border-width: 11px;
+  right: 8px;
+}
+
+.dropdown-menu-right[x-placement^=bottom] .arrow:before {
+    border-bottom-color: $secondary;
+    border-width: 12px;
+    right: 7px;
+}
+
+.dropdown-menu-right[x-placement^=top] .arrow:after {
+  border-top-color: $white;
+  border-width: 11px;
+  right: 8px;
+  bottom: auto;
+  top: 100%;
+}
+
+.dropdown-menu-right[x-placement^=top] .arrow:before {
+    border-top-color: $secondary;
+    border-width: 12px;
+    right: 7px;
+    bottom: auto;
+    top: 100%;
+}
+
+.dropdown-toggle::after {
+    border: none;
+    content: '';
+}
+
+:not(.dropup) .dropdown-toggle .expand-less,
+.dropup .dropdown-toggle .expand-more {
+    display: none;
+}
+
+.filter-icon {
+    position: absolute;
+    color: $primary;
+    left: 0;
+    transition: left 0.15s ease-in-out;
+}
+
+.filter-icon.active {
+    color: $muted;
+}
+
+.filter-icon:not(.top).active,
+.filter-icon.top:not(.active) {
+    left: 1.5rem;
+}
+
+.filter-input,
+.filter-input .btn-group {
+    width: 12rem;
+}
+
+:focus,
+.btn:focus
+{
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem $secondary;
+}
+
+.form-control:focus {
+    color: $black;
+    background-color: $white;
+    border-color: $black;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem $secondary;
+}
+
+.form-control {
+    border-radius: 2px;
+}
+
+.fade {
+    transition: opacity 0.15s ease-in-out;
+}
+
+.grow {
+    transition: all 0.15s ease-in-out;
+    z-index: 1;
+}
+
+.grow:hover {
+    transform: scale(1.08);
+}
+
+.grow .card-body {
+    z-index: 1;
+}
+
+.grow.shadow-sm::after,
+.grow .shadow-sm::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.grow:hover.shadow-sm::after,
+.grow:hover .shadow-sm::after {
+    opacity: 1;
+}
+
+.inline-icon {
+    right: 10px;
+    bottom:7px;
+    font-size: 1.5rem;
+    z-index: 10;
+    position: absolute;
+}
+
+.modal-dialog button.close {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    z-index: 10;
+}
+
+.modal-dialog button.close svg {
+    font-size: 1.5rem;
+}
+
+.modal-dialog .modal-content {
+    padding: 1rem;
+}
+
+.modal-dialog .modal-header,
+.modal-dialog .modal-footer {
+    border: none;
+}
+
+.multiselect-native-select .btn-group .btn {
+    border-radius: 2px;
+    padding: 0.5rem;
+}
+
+.multiselect-container > li {
+    margin-bottom: 2px;
+}
+
+.multiselect-container > li:hover,
+.multiselect-container > li.active:hover {
+    background: $hover;
+}
+
+.multiselect-container > li:hover > a > label {
+    color: $white;
+}
+
+.multiselect-container > li.active {
+    background: $primary;
+}
+
+.multiselect-container > li > a.custom-control {
+    text-decoration: none;
+    padding-left: 1.5rem;
+    color: $black;
+}
+
+.multiselect-container > li > a > label {
+    color: $black;
+    padding: 0;
+}
+
+.multiselect-container > li.active > a > label {
+    color: $white;
+}
+
+.multiselect-container li.active .custom-checkbox .custom-control-label::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='M6.564.75l-3.59 3.612-1.538-1.55L0 4.26l2.974 2.99L8 2.193z'/%3e%3c/svg%3e");
+}
+
+.multiselect-selected-text {
+    color: $muted;
+    font-style: italic;
+}
+
+.navbar-footer-uppercase:lang(en) {
+    text-transform: $navbar-footer-uppercase;
+}
+
+.navbar-dark .dropdown-item {
+    color: $white-50;
+}
+
+.navbar-dark .dropdown-item:hover {
+    color: $white;
+    background: transparent;
+}
+
+.object-fit-cover {
+    object-fit: cover;
+}
+
+.p-4-5 {
+    padding: 2.5rem;
+}
+
+::placeholder {
+    color: $muted;
+    font-style: italic;
+}
+
+.rotate-90 {
+    transform: rotate(90deg) !important;
+}
+
+.shadow,
+.shadown-sm
+{
+    border: 1px solid $secondary;
+}
+
+.spinner-border-lg {
+    width: 3rem;
+    height: 3rem;
+    border-width: .4em;
+}
+
+.text-muted {
+    color: $muted !important;
+}
+
+.text-uppercase {
+    text-transform: none;
+}
+
+.text-uppercase:lang(en) {
+    text-transform: uppercase;
+}
+
+.tiny-popover {
+    color: red;
+    border-radius: 2px;
+    box-shadow: 0px 1px 1px #00000026;
+}
+
+.w-33 {
+    width: 33%;
+}
+
+.was-validated .form-control:invalid,
+.was-validated .form-control:invalid:focus {
+    background-image: none;
+}

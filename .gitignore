@@ -107,3 +107,6 @@ build_notes.txt
 
 # VSCode config
 .vscode
+
+# local media
+media/

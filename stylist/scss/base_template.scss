@@ -1,0 +1,125 @@
+@import "./custom_vars";
+@import "./bootstrap/scss/bootstrap";
+
+$body-color: map_get($theme-colors, 'black');
+$button-font-size: 0.94rem;
+$hr-margin-top: 30px;
+$hr-margin-bottom: 30px;
+
+$enable-validation-icons: false;
+$navbar-footer-uppercase: uppercase;
+
+body {
+    line-height: $line-height;
+    letter-spacing: $letter-spacing-base;
+    font-size: $font-size-base;
+}
+
+.display-4 {
+    font-family: $font-family-headings;
+    letter-spacing: $display4-letter-spacing;
+    line-height: $display4-line-height;
+    font-size: $display4-font-size;
+}
+
+.display-5 {
+    font-family: $font-family-headings;
+    font-size: $display5-font-size;
+    font-weight: $display5-weight;
+    letter-spacing: $display5-letter-spacing;
+    line-height: $display5-line-height;
+}
+
+h1 {
+    font-family: $font-family-headings;
+    font-size: $h1-font-size;
+    font-weight: $h1-font-weight;
+    line-height: $h1-line-height;
+    letter-spacing: $h1-letter-spacing;
+}
+
+/* override for the rich text widget - can be removed when we build our own editor */
+.megadraft-editor h2,
+h2 {
+    font-family: $font-family-headings;
+    font-size: $h2-font-size;
+    font-weight: $h2-font-weight;
+    line-height: $h2-line-height;
+    letter-spacing: $h2-letter-spacing;
+}
+
+.megadraft-editor h3,
+h3 {
+    font-family: $font-family-headings;
+    font-size: $h3-font-size;
+    font-weight: $h3-font-weight;
+    line-height: $h3-line-height;
+    letter-spacing: $h3-letter-spacing;
+}
+
+.megadraft-editor h4,
+h4 {
+    font-family: $font-family-headings;
+    font-size: $h4-font-size;
+    font-weight: $h4-font-weight;
+    line-height: $h4-line-height;
+    letter-spacing: $h4-letter-spacing;
+}
+
+.megadraft-editor h5,
+h5 {
+    font-family: $font-family-headings;
+    font-size: $h5-font-size;
+    font-weight: $h5-font-weight;
+    line-height: $h5-line-height;
+    letter-spacing: $h5-letter-spacing;
+}
+
+h6 {
+    font-family: $font-family-headings;
+    font-size: $h6-font-size;
+    font-weight: $h6-font-weight;
+    line-height: $h6-line-height;
+    letter-spacing: $h6-letter-spacing;
+}
+
+img {
+    max-width: 100%;
+}
+
+.img-responsive-16by9-wrapper {
+  width: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding-top: 56.25%;
+  position: relative;
+}
+
+.img-responsive-16by9-wrapper img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  transform: translate(-50%, -50%);
+}
+
+.small {
+    font-size: $small-font-size;
+    line-height: $small-line-height;
+}
+
+label {
+    font-size: $label-font-size;
+    line-height: $label-line-height;
+    letter-spacing: $label-letter-spacing;
+}
+
+label.small {
+    font-size: $small-label-font-size;
+    line-height: $small-label-line-height;
+}
+
+hr {
+    margin-top: $hr-margin-top;
+    margin-bottom: $hr-margin-bottom;
+}

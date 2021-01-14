@@ -6,7 +6,7 @@ class StylistIndexView(ListView):
     """
     List of styles available for editing
     """
-    # template_name = "stylist/index.html"
+    template_name = "stylist/index.html"
     model = Style
 
 

@@ -1,7 +1,7 @@
 @import "./custom_vars";
 @import "./bootstrap/scss/bootstrap";
 
-$body-color: map_get($theme-colors, 'black');
+$body-color: $black;
 $button-font-size: 0.94rem;
 $hr-margin-top: 30px;
 $hr-margin-bottom: 30px;

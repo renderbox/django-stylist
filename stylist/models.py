@@ -1,5 +1,6 @@
 import uuid
 import sass
+import os
 
 from django.conf import settings
 from django.core.files.base import ContentFile
@@ -10,9 +11,11 @@ from django.contrib.sites.models import Site
 from django.utils.text import slugify
 
 from autoslug import AutoSlugField
+from tempfile import gettempdir
 
-SASS_MEDIA_PATH = getattr(settings, "SASS_MEDIA_PATH", '/site/{domain}/style/{filename}')
-SASS_DEFAULT_CSS = getattr(settings, "SASS_DEFAULT_CSS")
+STYLIST_CSS_MEDIA_PATH = getattr(settings, "STYLIST_CSS_MEDIA_PATH", '/site/{domain}/style/{filename}')
+STYLIST_DEFAULT_CSS = getattr(settings, "STYLIST_DEFAULT_CSS")
+STYLIST_SCSS_TEMPLATE = getattr(settings, "STYLIST_SCSS_TEMPLATE")
 
 def css_file_path(instance, filename):
     """
@@ -25,7 +28,7 @@ def css_file_path(instance, filename):
                 'site_name': slugify(instance.site.name),
                 'uuid': instance.uuid}
 
-    return settings.MEDIA_ROOT + SASS_MEDIA_PATH.format(**context)
+    return settings.MEDIA_ROOT + STYLIST_CSS_MEDIA_PATH.format(**context)
 
 def default_attrs():
     attrs = {}
@@ -58,14 +61,17 @@ class Style(models.Model):
     
     def get_style_css(self):
         if not self.css_file:
-            return SASS_DEFAULT_CSS
+            return STYLIST_DEFAULT_CSS
         
         return self.css_file.url
 
     def compile_attrs(self):
-        with open("../stylist/scss/custom_vars.scss", "w") as custom_vars:
+        with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
             string = ""
             for key in self.attrs:
                 string += "$" + key + ": " + self.attrs[key] + ";\n"
             custom_vars.write(string)
-        self.css_file.save(self.name + ".css", ContentFile(sass.compile(filename="../stylist/scss/base_template.scss")))
+            custom_vars.seek(0)
+            
+            self.css_file.save(self.name + ".css", ContentFile(sass.compile(filename=STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])))
+            os.remove(custom_vars.name)

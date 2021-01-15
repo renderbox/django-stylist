@@ -133,7 +133,8 @@ MEDIA_URL = "/media/"
 
 # Stylist Settings
 
-SASS_DEFAULT_CSS = STATIC_URL + "css/default.css"
+STYLIST_DEFAULT_CSS = STATIC_URL + "css/default.css"
+STYLIST_SCSS_TEMPLATE = os.path.join(BASE_DIR, "scss/base_template.scss")
 
 
 STYLE_SCHEMA = {

@@ -47,12 +47,14 @@ setup(
     install_requires=[
         'Django>=3.0,<3.2',
         'django-autoslug',
+        'libsass',
     ],
     extras_require={
         'dev': [                            # Packages needed by developers
             'django-crispy-forms',
             'django-allauth',
             'django-extensions',
+            'djangorestframework',
         ],
         'test': [],                         # Packages needed to run tests
         'prod': [],                         # Packages needed to run in the deployment

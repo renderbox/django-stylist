@@ -1,7 +1,14 @@
+import os
+
 from io import StringIO
 
-from django.test import TestCase
+from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.management import call_command
+from django.test import TestCase, Client
+from django.urls import reverse
+
+from stylist.models import Style
 
 # Create your tests here.
 class ModuleTests(TestCase):
@@ -20,3 +27,35 @@ class ModuleTests(TestCase):
                 assert e == '1'
             except:
                 self.fail("\n\nHey, There are missing migrations!\n\n %s" % output.getvalue())
+
+
+class StylistClientTests(TestCase):
+    '''
+    Client tests for Stylist and the Style model
+    '''
+    def setUp(self):
+        self.client = Client()
+    
+    def test_style_creation_api(self):
+        try:
+            self.assertEquals(Style.objects.all().count(), 0)
+            url = reverse("api-create-style")
+            response = self.client.post(url, {"name": "Test", "enabled": "False"}, follow=True)
+            self.assertEquals(Style.objects.all().count(), 1)
+            
+            style = Style.objects.get(pk=1)
+            # since it's the only style, it should be enabled
+            self.assertEquals(style.enabled, True)
+
+            site = Site.objects.get_current()
+            self.assertEquals(style.site, site)
+            css_path = settings.MEDIA_ROOT + "/site/" + site.domain + "/style/Test.css"
+            self.assertEquals(style.css_file, css_path)
+            # remove the new file, leaving any preexisting files
+            if(os.path.exists(css_path)):
+                os.remove(css_path)
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise

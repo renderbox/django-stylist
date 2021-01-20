@@ -4,4 +4,17 @@
 
 {% block content %}
 <h1>Stylist Base HTML Template</h1>
+<ul>
+    {% for style in object_list %}
+    <li>{{ style.name }}</li>
+    {% endfor %}
+</ul>
+
+<h1>Create a Style</h1>
+<form method="POST" action="{% url 'api-create-style' %}">
+    {% csrf_token %}
+    {{ form.name.as_hidden }}
+    {{ form.enabled.as_hidden }}
+    <input type="submit" value="Create" class="btn btn-primary text-light"></input>
+</form>
 {% endblock %}

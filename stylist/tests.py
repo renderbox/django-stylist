@@ -46,9 +46,10 @@ class StylistClientTests(TestCase):
             style = Style.objects.get(pk=1)
             # since it's the only style, it should be enabled
             self.assertEquals(style.enabled, True)
-            self.assertEquals(style.site, Site.objects.get_current())
 
-            css_path = settings.MEDIA_ROOT + "/site/example.com/style/Test.css"
+            site = Site.objects.get_current()
+            self.assertEquals(style.site, site)
+            css_path = settings.MEDIA_ROOT + "/site/" + site.domain + "/style/Test.css"
             self.assertEquals(style.css_file, css_path)
             # remove the new file, leaving any preexisting files
             if(os.path.exists(css_path)):

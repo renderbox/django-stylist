@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -29,7 +31,7 @@ class StyleEditForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        for key in cleaned_data:
+        for key in list(cleaned_data):
             if key != "name":
                 if settings.STYLE_SCHEMA[key]["type"] == "color":
                     self.clean_color(key)
@@ -44,8 +46,10 @@ class StyleEditForm(forms.ModelForm):
     # clean key types
     def clean_color(self, key):
         data = self.cleaned_data[key]
-        if data[0] != "#":
-            raise ValidationError("Please enter a valid hex code")
+        # match hex codes of length 3, 6, or 8
+        match = re.match("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3}|[A-Fa-f0-9]{8})$", data)
+        if not match:
+            self.add_error(key, ValidationError("Please enter a valid hex code"))
         return data
 
     def clean_number(self, key):
@@ -53,7 +57,7 @@ class StyleEditForm(forms.ModelForm):
         try:
             value = float(data)
         except:
-            raise ValidationError("Please enter a valid number")
+            self.add_error(key, ValidationError("Please enter a valid number"))
         return data
 
     def clean_rem(self, key):
@@ -68,9 +72,9 @@ class StyleEditForm(forms.ModelForm):
                 # else check if the string is a number followed by "rem"
                 value = float(data[:-3])
                 if data[-3:] != "rem":
-                    raise ValidationError("Please enter a valid rem value")
+                    self.add_error(key, ValidationError("Please enter a valid rem value"))
             except:
-                raise ValidationError("Please enter a valid rem value")
+                self.add_error(key, ValidationError("Please enter a valid rem value"))
         return data
 
     def clean_px(self, key):
@@ -85,9 +89,9 @@ class StyleEditForm(forms.ModelForm):
                 # else check if the string is a number followed by "px"
                 value = float(data[:-2])
                 if not data[-2:] == "px":
-                    raise ValidationError("Please enter a valid px value")
+                    self.add_error(key, ValidationError("Please enter a valid px value"))
             except:
-                raise ValidationError("Please enter a valid px value")
+                self.add_error(key, ValidationError("Please enter a valid px value"))
         return data
 
     def save(self):

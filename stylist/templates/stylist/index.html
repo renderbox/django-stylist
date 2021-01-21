@@ -6,11 +6,18 @@
 <h1>Stylist Base HTML Template</h1>
 <ul>
     {% for style in object_list %}
-    <li>{{ style.name }}</li>
+    <li>
+	<a href="{{style.get_absolute_url}}">Edit {{ style.name }}</a>
+	<ul>
+	    <li>
+		<a href="{% url 'stylist:stylist-delete' style.uuid %}"> Delete </a>
+	    </li>
+	</ul>
+    </li>
     {% endfor %}
 </ul>
 
-<h1>Create a Style</h1>
+<h1>Create a New Theme</h1>
 <form method="POST" action="{% url 'api-create-style' %}">
     {% csrf_token %}
     {{ form.name.as_hidden }}

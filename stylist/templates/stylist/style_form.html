@@ -1,0 +1,19 @@
+{% extends "stylist/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Stylist - Home{% endblock %}
+
+{% block content %}
+<h1>Edit {{ object.name }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="submit" value="Update" class="btn btn-primary text-light my-3"></input>
+</form>
+
+<h3>
+    <a href="{% url 'stylist:stylist-index' %}"> Return to Themes </a>
+</h3>
+
+{% endblock %}

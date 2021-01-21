@@ -1,6 +1,7 @@
-from django.views.generic import TemplateView, ListView
+from django.shortcuts import reverse
+from django.views.generic import TemplateView, ListView, UpdateView, DeleteView
 
-from .forms import StyleForm
+from .forms import StyleForm, StyleEditForm
 from .models import Style
 
 class StylistIndexView(ListView):
@@ -20,6 +21,23 @@ class StylistIndexView(ListView):
 
 
 # Stylist Edit Page
+class StylistUpdateView(UpdateView):
+    model = Style
+    form_class = StyleEditForm
+
+    def get_object(self, *args, **kwargs):
+        return Style.objects.get(uuid=self.kwargs.get("uuid"))
 
 
 # Stylist Detail Page
+
+
+class StylistDeleteView(DeleteView):
+    model = Style
+    template_name = 'stylist/style_delete.html'
+
+    def get_object(self, queryset=None):
+        return Style.objects.get(uuid=self.kwargs.get("uuid"))
+
+    def get_success_url(self):
+        return reverse('stylist:stylist-index')

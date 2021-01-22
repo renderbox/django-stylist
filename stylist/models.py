@@ -80,7 +80,6 @@ class Style(models.Model):
 
 
 @receiver(post_save, sender=Style)
-def only_one_active_catalog(sender, instance, **kwargs):
+def only_one_active_style(sender, instance, **kwargs):
     if instance.enabled:
-        site = Site.objects.get_current()
-        Style.objects.filter(site=site).exclude(pk=instance.pk).update(enabled=False)
+        Style.objects.filter(site=instance.site).exclude(pk=instance.pk).update(enabled=False)

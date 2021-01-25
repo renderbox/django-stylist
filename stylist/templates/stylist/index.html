@@ -6,49 +6,48 @@
 {% block content %}
 <div class="container">
     <div class="row mb-4 align-items-center">
-	<div class="col">
-	    <h1> Themes </h1>
-	</div>
-	<div class="col text-right">
-	    Active Theme: <b> {{ active_theme.name }} </b>
-	    <a class="btn btn-primary text-light ml-2" data-toggle="modal" data-target="#form_modal" href="{% url 'stylist:stylist-make-active' %}"></i> Change </a>
+        <div class="col">
+            <h1> Themes </h1>
+        </div>
+        <div class="col text-right">
+            Active Theme: <b> {{ active_theme.name }} </b>
+            <a class="btn btn-primary text-light ml-2" data-toggle="modal" data-target="#form_modal" href="{% url 'stylist:stylist-make-active' %}"> Change </a>
         </div>
     </div>
     <div class="row">
-	<div class="col">
-	    <h3>Available Themes</h3>
-	    <ul>
-		{% for style in object_list %}
-		<li>
-		    <a href="{{style.get_absolute_url}}">Edit {{ style.name }}</a>
-		    <ul>
-			<li>
-			    <a href="{% url 'stylist:stylist-delete' style.uuid %}" data-toggle="modal" data-target="#form_modal"> Delete </a>
-			</li>
-		    </ul>
-		</li>
-		{% endfor %}
-	    </ul>
+        <div class="col">
+            <h3>Available Themes</h3>
+            <ul>
+                {% for style in object_list %}
+                <li>
+                    <a href="{{style.get_absolute_url}}">Edit {{ style.name }}</a>
+                    <ul>
+                        <li>
+                            <a href="{% url 'stylist:stylist-delete' style.uuid %}" data-toggle="modal" data-target="#form_modal"> Delete </a>
+                        </li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
 
-	    <form method="POST" action="{% url 'api-create-style' %}">
-		{% csrf_token %}
-		{{ form.name.as_hidden }}
-		{{ form.enabled.as_hidden }}
-		<input type="submit" value="New Theme" class="btn btn-primary text-light"></input>
-	    </form>
-	</div>
+            <form method="POST" action="{% url 'api-create-style' %}">
+                {% csrf_token %}
+                {{ form.name.as_hidden }}
+                {{ form.enabled.as_hidden }}
+                <input type="submit" value="New Theme" class="btn btn-primary text-light"></input>
+            </form>
+        </div>
     </div>
-
-
+</div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="form_modal">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+	    
+        </div>
     </div>
-  </div>
 </div>
-</div>
+
 
 {% endblock %}
 

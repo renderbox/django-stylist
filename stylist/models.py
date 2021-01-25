@@ -15,7 +15,7 @@ from django.utils.text import slugify
 from autoslug import AutoSlugField
 from tempfile import gettempdir
 
-STYLIST_CSS_MEDIA_PATH = getattr(settings, "STYLIST_CSS_MEDIA_PATH", '/site/{domain}/style/{filename}')
+STYLIST_CSS_MEDIA_PATH = getattr(settings, "STYLIST_CSS_MEDIA_PATH", 'site/{domain}/style/{filename}')
 STYLIST_DEFAULT_CSS = getattr(settings, "STYLIST_DEFAULT_CSS")
 STYLIST_SCSS_TEMPLATE = getattr(settings, "STYLIST_SCSS_TEMPLATE")
 
@@ -30,7 +30,7 @@ def css_file_path(instance, filename):
                 'site_name': slugify(instance.site.name),
                 'uuid': instance.uuid}
 
-    return settings.MEDIA_ROOT + STYLIST_CSS_MEDIA_PATH.format(**context)
+    return STYLIST_CSS_MEDIA_PATH.format(**context)
 
 def default_attrs():
     attrs = {}

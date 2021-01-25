@@ -2,6 +2,7 @@ import re
 
 from django import forms
 from django.conf import settings
+from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError
 
 from stylist.models import Style
@@ -16,6 +17,18 @@ class StyleForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["name"].initial = "New Theme"
         self.fields["enabled"].initial = False
+
+
+class ActiveStyleForm(forms.Form):
+    active = forms.ModelChoiceField(queryset=Style.objects.filter(site=Site.objects.get_current()), label="New Active Theme", empty_label="Choose Theme")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["active"].initial = Style.objects.filter(site=Site.objects.get_current()).get(enabled=True)
+        except:
+            pass
+
 
 
 class StyleEditForm(forms.ModelForm):

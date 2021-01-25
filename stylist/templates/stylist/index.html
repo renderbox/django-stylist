@@ -1,27 +1,73 @@
 {% extends "stylist/base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Stylist - Home{% endblock %}
 
 {% block content %}
-<h1>Stylist Base HTML Template</h1>
-<ul>
-    {% for style in object_list %}
-    <li>
-	<a href="{{style.get_absolute_url}}">Edit {{ style.name }}</a>
-	<ul>
-	    <li>
-		<a href="{% url 'stylist:stylist-delete' style.uuid %}"> Delete </a>
-	    </li>
-	</ul>
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <div class="row mb-4 align-items-center">
+	<div class="col">
+	    <h1> Themes </h1>
+	</div>
+	<div class="col text-right">
+	    Active Theme: <b> {{ active_theme.name }} </b>
+	    <a class="btn btn-primary text-light ml-2" data-toggle="modal" data-target="#form_modal" href="{% url 'stylist:stylist-make-active' %}"></i> Change </a>
+        </div>
+    </div>
+    <div class="row">
+	<div class="col">
+	    <h3>Available Themes</h3>
+	    <ul>
+		{% for style in object_list %}
+		<li>
+		    <a href="{{style.get_absolute_url}}">Edit {{ style.name }}</a>
+		    <ul>
+			<li>
+			    <a href="{% url 'stylist:stylist-delete' style.uuid %}" data-toggle="modal" data-target="#form_modal"> Delete </a>
+			</li>
+		    </ul>
+		</li>
+		{% endfor %}
+	    </ul>
 
-<h1>Create a New Theme</h1>
-<form method="POST" action="{% url 'api-create-style' %}">
-    {% csrf_token %}
-    {{ form.name.as_hidden }}
-    {{ form.enabled.as_hidden }}
-    <input type="submit" value="Create" class="btn btn-primary text-light"></input>
-</form>
+	    <form method="POST" action="{% url 'api-create-style' %}">
+		{% csrf_token %}
+		{{ form.name.as_hidden }}
+		{{ form.enabled.as_hidden }}
+		<input type="submit" value="New Theme" class="btn btn-primary text-light"></input>
+	    </form>
+	</div>
+    </div>
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" id="form_modal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+
+        $('#form_modal').on('show.bs.modal', function (evt) {
+            var modal = $(this).find('.modal-content');
+            var url = evt.relatedTarget.href; {% comment %}// pull form contents from href attr of button{% endcomment %}
+            $.ajax({
+                url: url,
+                context: document.body
+            }).done(function(response) {
+                modal.html(response);
+            });
+        });
+
+    });
+</script>
 {% endblock %}

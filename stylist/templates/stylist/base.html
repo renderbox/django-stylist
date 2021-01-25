@@ -41,7 +41,11 @@
     </style>
 
     <!-- Custom styles for this template -->
+    {% if custom_style %}
+    <link href="{{ custom_style }}" rel="stylesheet" type="text/css">
+    {% else %}
     <link href="{% static 'css/default.css' %}" rel="stylesheet" type="text/css">
+    {% endif %}
     {% block extra_css %}{% endblock %}
     
     {% block extra_head_js %}{% endblock %}
@@ -112,8 +116,10 @@
     </footer>
   </div>
 
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
 
   <script>
   setTimeout(function () {

@@ -8,4 +8,5 @@ urlpatterns = [
     path("", views.StylistIndexView.as_view(), name="stylist-index"),
     path("style/<uuid:uuid>/edit/", views.StylistUpdateView.as_view(), name="stylist-edit"),
     path("style/<uuid:uuid>/delete/", views.StylistDeleteView.as_view(), name="stylist-delete"),
+    path("style/active/", views.StylistActiveView.as_view(), name="stylist-make-active"),
 ]

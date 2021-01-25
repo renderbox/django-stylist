@@ -8,7 +8,11 @@ from .models import Style
 
 
 def get_custom_styles(request):
-    site = Site.objects.get_current()
+    if getattr(request, "site", None):
+        site = request.site
+    else:
+        site = Site.objects.get_current()
+        
     try:
         style = Style.objects.filter(site=site).get(enabled=True)
         custom_style = style.css_file.url

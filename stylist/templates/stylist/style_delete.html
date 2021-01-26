@@ -1,0 +1,16 @@
+{% extends "stylist/base.html" %}
+
+{% block content %}
+<div class="mb-4">
+    <h1> Delete {{ object.name }} </h1>
+</div>
+
+<form method="post" action="{% url 'stylist:stylist-delete' uuid=object.uuid %}">
+    <div>
+        <label for=""> Are you sure you want to delete this Theme? </label>
+    </div>
+    {% csrf_token %}
+    <a href="{% url 'stylist:stylist-index' %}" class="btn btn-primary"> Go back</a>
+    <input type="submit" class="btn btn-danger" href="" value="Delete"/>
+</form>
+{% endblock %}

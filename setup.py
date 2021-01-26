@@ -41,7 +41,7 @@ package_metadata = {
 setup(
     **package_metadata,
     packages=find_packages(),
-    package_data={'stylist': ['*.html']},
+    package_data={'stylist': ['templates/stylist/*.html']},
     include_package_data=True,
     python_requires=">=3.6",
     install_requires=[

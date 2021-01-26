@@ -5,8 +5,10 @@ import os
 from django.conf import settings
 from django.core.files.base import ContentFile
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.translation import ugettext as _
-# from django.urls import reverse
+from django.urls import reverse
 from django.contrib.sites.models import Site
 from django.utils.text import slugify
 
@@ -56,8 +58,8 @@ class Style(models.Model):
     def __str__(self):
         return "{}: {}".format(self.site.name, self.name)
 
-#     def get_absolute_url(self):
-#         return reverse( "stylist:edit", kwargs={"uuid": self.uuid})
+    def get_absolute_url(self):
+        return reverse( "stylist:stylist-edit", kwargs={"uuid": self.uuid})
     
     def get_style_css(self):
         if not self.css_file:
@@ -75,3 +77,9 @@ class Style(models.Model):
             
             self.css_file.save(self.name + ".css", ContentFile(sass.compile(filename=STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])))
             os.remove(custom_vars.name)
+
+
+@receiver(post_save, sender=Style)
+def only_one_active_style(sender, instance, **kwargs):
+    if instance.enabled:
+        Style.objects.filter(site=instance.site).exclude(pk=instance.pk).update(enabled=False)

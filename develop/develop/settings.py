@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django_extensions',
+    'crispy_forms',
     'stylist',
 ]
 
@@ -254,7 +255,7 @@ STYLE_SCHEMA = {
         "label": "Shadow"
     },
     "line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.375",
         "label": "Base Line Height"
     },
@@ -279,7 +280,7 @@ STYLE_SCHEMA = {
         "label": "Font (Display and Headers)"
     },
     "display4-weight": {
-        "type": "int",
+        "type": "number",
         "default": "700",
         "label": "Display 4 Font Weight"
     },
@@ -289,7 +290,7 @@ STYLE_SCHEMA = {
         "label": "Display 4 Letter Spacing"
     },
     "display4-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.04",
         "label": "Display 4 Line Height"
     },
@@ -304,7 +305,7 @@ STYLE_SCHEMA = {
         "label": "Display 5 Font Size"
     },
     "display5-weight": {
-        "type": "int",
+        "type": "number",
         "default": "600",
         "label": "Display 5 Font Weight"
     },
@@ -314,7 +315,7 @@ STYLE_SCHEMA = {
         "label": "Display 5 Letter Spacing"
     },
     "display5-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.04",
         "label": "Display 5 Line Height"
     },
@@ -324,12 +325,12 @@ STYLE_SCHEMA = {
         "label": "H1 Font Size"
     },
     "h1-font-weight": {
-        "type": "int",
+        "type": "number",
         "default": "600",
         "label": "H1 Font Weight"
     },
     "h1-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.1",
         "label": "H1 Line Height"
     },
@@ -344,12 +345,12 @@ STYLE_SCHEMA = {
         "label": "H2 Font Size"
     },
     "h2-font-weight": {
-        "type": "int",
+        "type": "number",
         "default": "600",
         "label": "H2 Font Weight"
     },
     "h2-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.125",
         "label": "H2 Line Height"
     },
@@ -364,12 +365,12 @@ STYLE_SCHEMA = {
         "label": "H3 Font Size"
     },
     "h3-font-weight": {
-        "type": "int",
+        "type": "number",
         "default": "700",
         "label": "H3 Font Weight"
     },
     "h3-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.08",
         "label": "H3 Line Height"
     },
@@ -384,12 +385,12 @@ STYLE_SCHEMA = {
         "label": "H4 Font Size"
     },
     "h4-font-weight": {
-        "type": "int",
+        "type": "number",
         "default": "600",
         "label": "H4 Font Weight"
     },
     "h4-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.17",
         "label": "H4 Line Height"
     },
@@ -404,12 +405,12 @@ STYLE_SCHEMA = {
         "label": "H5 Font Size"
     },
     "h5-font-weight": {
-        "type": "int",
+        "type": "number",
         "default": "700",
         "label": "H5 Font Weight"
     },
     "h5-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.1",
         "label": "H5 Line Height"
     },
@@ -424,12 +425,12 @@ STYLE_SCHEMA = {
         "label": "H6 Font Size"
     },
     "h6-font-weight": {
-        "type": "int",
+        "type": "number",
         "default": "700",
         "label": "H6 Font Weight"
     },
     "h6-line-height": {
-        "type": "int",
+        "type": "number",
         "default": "1.17",
         "label": "H6 Line Height"
     },
@@ -459,7 +460,7 @@ STYLE_SCHEMA = {
         "label": "Small Font Size"
     },
     "small-line-height": {
-        "type": "int",
+        "type": "number",
         "label": "Small Line Height",
         "default": "1.31"
     },
@@ -469,7 +470,7 @@ STYLE_SCHEMA = {
         "label": "Small Label Font Size"
     },
     "small-label-line-height": {
-        "type": "int",
+        "type": "number",
         "label": "Small Label Line Height",
         "default": "1.4"
     }

@@ -59,3 +59,44 @@ class StylistClientTests(TestCase):
             print(response.status_code)
             print(response.content.decode('utf-8'))
             raise
+
+    def test_style_update(self):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+            url = reverse("stylist:stylist-edit", kwargs={"uuid": style.uuid})
+            
+            data = style.attrs
+            data["name"] = "Updated"
+            data["primary"] = "#FF0000"
+            response = self.client.post(url, data, follow=True)
+
+            style.refresh_from_db()
+            self.assertEquals(style.name, "Updated")
+            self.assertEquals(style.attrs["primary"], "#FF0000")
+            
+            css_path = settings.MEDIA_ROOT + "/site/" + site.domain + "/style/Updated.css"
+            # remove the new file, leaving any preexisting files
+            if(os.path.exists(css_path)):
+                os.remove(css_path)
+            
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise
+
+    def test_style_delete(self):
+        try:
+            style = Style.objects.create(name="Test", enabled=False)
+            self.assertEquals(Style.objects.all().count(), 1)
+            
+            url = reverse("stylist:stylist-delete", kwargs={"uuid": style.uuid})
+            response = self.client.post(url, follow=True)
+
+            self.assertEquals(Style.objects.all().count(), 0)
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise

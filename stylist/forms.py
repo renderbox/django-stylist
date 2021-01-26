@@ -20,12 +20,18 @@ class StyleForm(forms.ModelForm):
 
 
 class ActiveStyleForm(forms.Form):
-    active = forms.ModelChoiceField(queryset=Style.objects.filter(site=Site.objects.get_current()), label="New Active Theme", empty_label="Choose Theme")
+    active = forms.ModelChoiceField(queryset=Style.objects.all(), label="New Active Theme", empty_label="Choose Theme")
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        if 'request' in kwargs:
+            self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)      
+        site = settings.SITE_ID
+        if hasattr(self, 'request') and hasattr(self.request, 'site'):
+            site = self.request.site.id
+        self.fields["active"].queryset = Style.objects.filter(site=site)
         try:
-            self.fields["active"].initial = Style.objects.filter(site=Site.objects.get_current()).get(enabled=True)
+            self.fields["active"].initial = Style.objects.filter(site=site).get(enabled=True)
         except:
             pass
 
@@ -39,7 +45,13 @@ class StyleEditForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for key in self.instance.attrs:
-            self.fields[key] = forms.CharField(required=True, label=settings.STYLE_SCHEMA[key]["label"])
+            self.fields[key] = forms.CharField(
+                required=True,
+                label=settings.STYLE_SCHEMA[key]["label"],
+                widget=forms.TextInput(
+                    attrs={'data-type': settings.STYLE_SCHEMA[key]["type"]}
+                )
+            )
             self.fields[key].initial = self.instance.attrs[key]
 
     def clean(self):

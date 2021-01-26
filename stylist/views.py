@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.shortcuts import reverse, redirect
 from django.views.generic import FormView, ListView, UpdateView, DeleteView
@@ -16,8 +17,11 @@ class StylistIndexView(ListView):
         context = super().get_context_data()
         context["form"] = StyleForm
         context["active_form"] = ActiveStyleForm
+        site_id = settings.SITE_ID
+        if hasattr(self.request, 'site'):
+            site_id = self.request.site.id
         try:
-            context["active_theme"] = Style.objects.filter(site=Site.objects.get_current()).get(enabled=True)
+            context["active_theme"] = Style.objects.filter(site=site_id).get(enabled=True)
         except:
             pass
         return context
@@ -48,11 +52,20 @@ class StylistActiveView(FormView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data()
+        site_id = settings.SITE_ID
+        if hasattr(self.request, 'site'):
+            site_id = self.request.site.id
         try:
-            context["active_theme"] = Style.objects.filter(site=Site.objects.get_current()).get(enabled=True)
+            context["active_theme"] = Style.objects.filter(site=site_id).get(enabled=True)
         except:
             pass
         return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
 
 
 

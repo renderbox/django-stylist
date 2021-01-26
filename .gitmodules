@@ -1,3 +1,0 @@
-[submodule "stylist/scss/bootstrap"]
-	path = develop/scss/bootstrap
-	url = https://github.com/twbs/bootstrap.git

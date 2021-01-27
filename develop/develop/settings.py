@@ -272,7 +272,7 @@ STYLE_SCHEMA = {
     },
     "font-family-base": {
         "type": "font",
-        "default": "'Source Sans Pro', sans-serif",
+        "default": "Source Sans Pro",
         "label": "Font (Body Styles and Labels)"
     },
     "font-family-headings": {

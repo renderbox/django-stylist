@@ -70,8 +70,18 @@ class Style(models.Model):
     def compile_attrs(self):
         with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
             string = ""
+            google_fonts = "@import url('https://fonts.googleapis.com/css?family="
+            num_fonts = 0
             for key in self.attrs:
                 string += "$" + key + ": " + self.attrs[key] + ";\n"
+                if settings.STYLE_SCHEMA[key]["type"] == "font":
+                    if num_fonts > 0:
+                        google_fonts += "|"
+                    google_fonts += self.attrs[key].replace(" ", "+")
+                    num_fonts += 1
+            if num_fonts > 0:
+                google_fonts += "&display=swap');\n"
+                string = google_fonts + string
             custom_vars.write(string)
             custom_vars.seek(0)
             

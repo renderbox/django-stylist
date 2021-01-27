@@ -45,14 +45,14 @@ class StylistPreviewView(FormView):
     def form_valid(self, form):
         with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
             string = ""
-            google_fonts = "@import url('https://fonts.googleapis.com/css?family="
+            google_fonts = "@import url('https://fonts.googleapis.com/css2?family="
             num_fonts = 0
             for key in form.cleaned_data:
                 if key != "name":
                     string += "$" + key + ": " + form.cleaned_data[key] + ";\n"
                     if settings.STYLE_SCHEMA[key]["type"] == "font":
                         if num_fonts > 0:
-                            google_fonts += "|"
+                            google_fonts += "&family="
                         google_fonts += form.cleaned_data[key].replace(" ", "+")
                         num_fonts += 1
             if num_fonts > 0:

@@ -19,7 +19,10 @@ def get_custom_styles(request):
     except:
         custom_style = None
 
+    preview = request.session.get("preview_css")
+
     return {
-        'custom_style': custom_style
+        'custom_style': custom_style,
+        'preview_style': preview,
         }
 

@@ -114,3 +114,40 @@ class StylistClientTests(TestCase):
             print(response.status_code)
             print(response.content.decode('utf-8'))
             raise
+
+
+    def test_style_preview(self):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+
+            url = reverse("stylist:stylist-preview", kwargs={"uuid": style.uuid})
+            data = style.attrs
+            data["name"] = style.name
+            response = self.client.post(url, data, follow=True)
+            self.assertEquals(response.context["preview_style"], settings.MEDIA_URL + "site/" + site.domain + "/style/Test_preview.css")
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise
+
+
+    def test_end_preview(self):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+
+            url = reverse("stylist:stylist-preview", kwargs={"uuid": style.uuid})
+            data = style.attrs
+            data["name"] = style.name
+            response = self.client.post(url, data, follow=True)
+
+            new_url = reverse("stylist:stylist-end-preview")
+            new_response = self.client.get(new_url, HTTP_REFERER=reverse("stylist:stylist-index"), follow=True)
+            self.assertEquals(new_response.context.get("preview_style"), None)
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise

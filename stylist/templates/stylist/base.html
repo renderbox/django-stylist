@@ -41,7 +41,9 @@
     </style>
 
     <!-- Custom styles for this template -->
-    {% if custom_style %}
+    {% if preview_style %}
+    <link href="{{ preview_style }}" rel="stylesheet" type="text/css">
+    {% elif custom_style %}
     <link href="{{ custom_style }}" rel="stylesheet" type="text/css">
     {% else %}
     <link href="{% static 'css/default.css' %}" rel="stylesheet" type="text/css">
@@ -53,6 +55,22 @@
   </head>
   <body>
 
+    {% if preview_style %}
+    <div class="bg-danger text-light container-fluid p-3">
+      <div class="row align-items-center">
+        <div class="col">
+          Theme Preview
+        </div>
+        <div class="col text-center">
+          <b>Refresh to see changes</b>
+        </div>
+        <div class="col text-right">
+          <a href="{% url 'stylist:stylist-end-preview' %}" class="text-light"><b>Cancel Preview</b></a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    
     <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
       <h5 class="my-0 mr-md-auto font-weight-normal">Stylist</h5>
       <nav class="my-2 my-md-0 mr-md-3">

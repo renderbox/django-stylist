@@ -3,6 +3,8 @@ import sass
 
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.shortcuts import reverse, redirect
 from django.views.generic import FormView, ListView, UpdateView, DeleteView
 
@@ -64,17 +66,11 @@ class StylistPreviewView(FormView):
 
             instance = Style.objects.get(uuid=self.kwargs["uuid"])
 
-            # make sure the path exists to write to
             filename = settings.MEDIA_ROOT + "/" + css_file_path(instance, instance.name + "_preview.css")
-            dirname = os.path.dirname(filename)
-            if not os.path.exists(dirname):
-                os.makedirs(dirname)
-                
-            with open(filename, "w+") as preview:
-                preview.write(sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()]))
-                preview.seek(0)
-                self.request.session["preview_css"] = settings.MEDIA_URL + css_file_path(instance, instance.name + "_preview.css")
-                os.remove(custom_vars.name)
+            preview = default_storage.save(filename, ContentFile(sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])))
+            
+            self.request.session["preview_css"] = settings.MEDIA_URL + css_file_path(instance, instance.name + "_preview.css")
+            os.remove(custom_vars.name)
         return redirect("stylist:stylist-index")
 
 

@@ -1,0 +1,43 @@
+{% extends "stylist/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Stylist - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+	<div class="col">
+	    <h1>Edit {{ object.name }}</h1>
+	</div>
+	<div class="col text-right">
+	    <a id="preview" class="btn text-primary"> Preview </a>
+	    <a href="{% url 'stylist:stylist-index' %}" class="btn text-primary"> Exit </a>
+	</div>
+    </div>
+    <div class="row">
+
+	<form method="POST" id="style_form">
+	    {% csrf_token %}
+	    {{ form|crispy }}
+	    <input type="submit" value="Update" class="btn btn-primary text-light my-3">
+	</form>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $( document ).ready(function() {
+      var form = document.getElementById("style_form");
+
+      document.getElementById("preview").addEventListener("click", function () {
+        form.action = "{% url 'stylist:stylist-preview' uuid=object.uuid %}";
+        form.target = "_blank";
+        form.submit();
+        $(form).removeAttr("action");
+        $(form).removeAttr("target");
+      });
+    });
+</script>
+{% endblock %}

@@ -41,17 +41,20 @@ package_metadata = {
 setup(
     **package_metadata,
     packages=find_packages(),
-    package_data={'stylist': ['*.html']},
+    package_data={'stylist': ['templates/stylist/*.html']},
     include_package_data=True,
     python_requires=">=3.6",
     install_requires=[
         'Django>=3.0,<3.2',
+        'django-autoslug',
+        'libsass',
     ],
     extras_require={
         'dev': [                            # Packages needed by developers
             'django-crispy-forms',
             'django-allauth',
             'django-extensions',
+            'djangorestframework',
         ],
         'test': [],                         # Packages needed to run tests
         'prod': [],                         # Packages needed to run in the deployment

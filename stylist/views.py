@@ -63,7 +63,14 @@ class StylistPreviewView(FormView):
             custom_vars.seek(0)
 
             instance = Style.objects.get(uuid=self.kwargs["uuid"])
-            with open(settings.MEDIA_ROOT + "/" + css_file_path(instance, instance.name + "_preview.css"), "w+") as preview:
+
+            # make sure the path exists to write to
+            filename = settings.MEDIA_ROOT + "/" + css_file_path(instance, instance.name + "_preview.css")
+            dirname = os.path.dirname(filename)
+            if not os.path.exists(dirname):
+                os.makedirs(dirname)
+                
+            with open(filename, "w+") as preview:
                 preview.write(sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()]))
                 preview.seek(0)
                 self.request.session["preview_css"] = settings.MEDIA_URL + css_file_path(instance, instance.name + "_preview.css")

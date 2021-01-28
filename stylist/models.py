@@ -78,6 +78,7 @@ class Style(models.Model):
                     if num_fonts > 0:
                         google_fonts += "&family="
                     google_fonts += self.attrs[key].replace(" ", "+")
+                    google_fonts += ":wght@100;200;300;400;500;600;700;800;900"
                     num_fonts += 1
             if num_fonts > 0:
                 google_fonts += "&display=swap');\n"

@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'stylist.context_processors.get_custom_styles',
             ],
         },
     },
@@ -271,7 +272,7 @@ STYLE_SCHEMA = {
     },
     "font-family-base": {
         "type": "font",
-        "default": "'Source Sans Pro', sans-serif",
+        "default": "Source Sans Pro",
         "label": "Font (Body Styles and Labels)"
     },
     "font-family-headings": {

@@ -41,7 +41,13 @@
     </style>
 
     <!-- Custom styles for this template -->
+    {% if preview_style %}
+    <link href="{{ preview_style }}" rel="stylesheet" type="text/css">
+    {% elif custom_style %}
+    <link href="{{ custom_style }}" rel="stylesheet" type="text/css">
+    {% else %}
     <link href="{% static 'css/default.css' %}" rel="stylesheet" type="text/css">
+    {% endif %}
     {% block extra_css %}{% endblock %}
     
     {% block extra_head_js %}{% endblock %}
@@ -49,6 +55,22 @@
   </head>
   <body>
 
+    {% if preview_style %}
+    <div class="bg-danger text-light container-fluid p-3">
+      <div class="row align-items-center">
+        <div class="col">
+          Theme Preview
+        </div>
+        <div class="col text-center">
+          <b>Refresh to see changes</b>
+        </div>
+        <div class="col text-right">
+          <a href="{% url 'stylist:stylist-end-preview' %}" class="text-light"><b>Cancel Preview</b></a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    
     <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
       <h5 class="my-0 mr-md-auto font-weight-normal">Stylist</h5>
       <nav class="my-2 my-md-0 mr-md-3">
@@ -112,8 +134,10 @@
     </footer>
   </div>
 
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
   <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
 
   <script>
   setTimeout(function () {

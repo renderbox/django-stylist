@@ -50,7 +50,7 @@ class StylistClientTests(TestCase):
             site = Site.objects.get_current()
             self.assertEquals(style.site, site)
             css_path = settings.MEDIA_ROOT + "/site/" + site.domain + "/style/Test.css"
-            self.assertEquals(style.css_file, css_path)
+            self.assertEquals(style.css_file.path, css_path)
             # remove the new file, leaving any preexisting files
             if(os.path.exists(css_path)):
                 os.remove(css_path)
@@ -88,13 +88,64 @@ class StylistClientTests(TestCase):
 
     def test_style_delete(self):
         try:
-            style = Style.objects.create(name="Test", enabled=False)
+            style = Style.objects.create(name="Test", enabled=True)
             self.assertEquals(Style.objects.all().count(), 1)
             
             url = reverse("stylist:stylist-delete", kwargs={"uuid": style.uuid})
             response = self.client.post(url, follow=True)
 
             self.assertEquals(Style.objects.all().count(), 0)
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise
+
+    def test_style_active(self):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+            url = reverse("stylist:stylist-make-active")
+
+            response = self.client.post(url, {"active": 1}, follow=True)
+            self.assertEquals(response.context["active_theme"], style)
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise
+
+
+    def test_style_preview(self):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+
+            url = reverse("stylist:stylist-preview", kwargs={"uuid": style.uuid})
+            data = style.attrs
+            data["name"] = style.name
+            response = self.client.post(url, data, follow=True)
+            self.assertEquals(response.context["preview_style"], settings.MEDIA_URL + "site/" + site.domain + "/style/Test_preview.css")
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise
+
+
+    def test_end_preview(self):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+
+            url = reverse("stylist:stylist-preview", kwargs={"uuid": style.uuid})
+            data = style.attrs
+            data["name"] = style.name
+            response = self.client.post(url, data, follow=True)
+
+            new_url = reverse("stylist:stylist-end-preview")
+            new_response = self.client.get(new_url, HTTP_REFERER=reverse("stylist:stylist-index"), follow=True)
+            self.assertEquals(new_response.context.get("preview_style"), None)
         except:
             print("")
             print(response.status_code)

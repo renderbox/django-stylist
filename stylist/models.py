@@ -15,7 +15,7 @@ from django.utils.text import slugify
 from autoslug import AutoSlugField
 from tempfile import gettempdir
 
-STYLIST_CSS_MEDIA_PATH = getattr(settings, "STYLIST_CSS_MEDIA_PATH", '/site/{domain}/style/{filename}')
+STYLIST_CSS_MEDIA_PATH = getattr(settings, "STYLIST_CSS_MEDIA_PATH", 'site/{domain}/style/{filename}')
 STYLIST_DEFAULT_CSS = getattr(settings, "STYLIST_DEFAULT_CSS")
 STYLIST_SCSS_TEMPLATE = getattr(settings, "STYLIST_SCSS_TEMPLATE")
 
@@ -30,7 +30,7 @@ def css_file_path(instance, filename):
                 'site_name': slugify(instance.site.name),
                 'uuid': instance.uuid}
 
-    return settings.MEDIA_ROOT + STYLIST_CSS_MEDIA_PATH.format(**context)
+    return STYLIST_CSS_MEDIA_PATH.format(**context)
 
 def default_attrs():
     attrs = {}
@@ -70,8 +70,19 @@ class Style(models.Model):
     def compile_attrs(self):
         with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
             string = ""
+            google_fonts = "@import url('https://fonts.googleapis.com/css2?family="
+            num_fonts = 0
             for key in self.attrs:
                 string += "$" + key + ": " + self.attrs[key] + ";\n"
+                if settings.STYLE_SCHEMA[key]["type"] == "font":
+                    if num_fonts > 0:
+                        google_fonts += "&family="
+                    google_fonts += self.attrs[key].replace(" ", "+")
+                    google_fonts += ":wght@100;200;300;400;500;600;700;800;900"
+                    num_fonts += 1
+            if num_fonts > 0:
+                google_fonts += "&display=swap');\n"
+                string = google_fonts + string
             custom_vars.write(string)
             custom_vars.seek(0)
             

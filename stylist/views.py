@@ -6,6 +6,7 @@ from django.contrib.sites.models import Site
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.shortcuts import reverse, redirect
+from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView, UpdateView, DeleteView
 
 from tempfile import gettempdir
@@ -38,6 +39,7 @@ class StylistIndexView(ListView):
 class StylistPreviewView(FormView):
     form_class = StyleEditForm
     template_name = "stylist/style_form.html"
+    success_url = reverse_lazy("stylist:stylist-index")
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data()
@@ -74,7 +76,7 @@ class StylistPreviewView(FormView):
             self.request.session["preview_css"] = settings.MEDIA_URL + css_file_path(instance, instance.name + "_preview.css")
             self.request.session["preview_path"] = preview
             os.remove(custom_vars.name)
-        return redirect("stylist:stylist-index")
+        return redirect(self.get_success_url())
 
 
 # Stylist Edit Page

@@ -4,6 +4,7 @@ from io import StringIO
 
 from django.conf import settings
 from django.contrib.sites.models import Site
+from django.core.files.storage import default_storage
 from django.core.management import call_command
 from django.test import TestCase, Client
 from django.urls import reverse
@@ -126,6 +127,10 @@ class StylistClientTests(TestCase):
             data["name"] = style.name
             response = self.client.post(url, data, follow=True)
             self.assertEquals(response.context["preview_style"], settings.MEDIA_URL + "site/" + site.domain + "/style/Test_preview.css")
+
+            # cleanup preview file
+            path = self.client.session["preview_path"]
+            default_storage.delete(path)
         except:
             print("")
             print(response.status_code)

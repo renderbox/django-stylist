@@ -70,6 +70,7 @@ class StylistPreviewView(FormView):
             preview = default_storage.save(filename, ContentFile(sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])))
             
             self.request.session["preview_css"] = settings.MEDIA_URL + css_file_path(instance, instance.name + "_preview.css")
+            self.request.session["preview_path"] = preview
             os.remove(custom_vars.name)
         return redirect("stylist:stylist-index")
 
@@ -128,4 +129,7 @@ class StylistDeleteView(DeleteView):
 # Ends preview mode
 def end_preview(request):
     preview = request.session.pop("preview_css", None)
+    preview_path = request.session.pop("preview_path", None)
+    if preview_path:
+        default_storage.delete(preview_path)
     return redirect(request.META.get('HTTP_REFERER'))

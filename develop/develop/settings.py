@@ -44,6 +44,16 @@ INSTALLED_APPS = [
     'django_extensions',
     'crispy_forms',
     'stylist',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+]
+
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 MIDDLEWARE = [

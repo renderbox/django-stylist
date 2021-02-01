@@ -3,6 +3,7 @@ import os
 from io import StringIO
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.core.files.storage import default_storage
 from django.core.management import call_command
@@ -36,6 +37,8 @@ class StylistClientTests(TestCase):
     '''
     def setUp(self):
         self.client = Client()
+        self.user = get_user_model().objects.create(username="testuser")
+        self.client.force_login(self.user)
     
     def test_style_creation_api(self):
         try:

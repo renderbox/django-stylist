@@ -68,10 +68,11 @@ class StylistPreviewView(FormView):
 
             instance = Style.objects.get(uuid=self.kwargs["uuid"])
 
-            filename = settings.MEDIA_ROOT + "/" + css_file_path(instance, instance.name + "_preview.css")
+            filename = css_file_path(instance, instance.name + "_preview.css")
             if default_storage.exists(filename):
                 default_storage.delete(filename)
-            preview = default_storage.save(filename, ContentFile(sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])))
+            content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
+            preview = default_storage.save(filename, ContentFile(content.encode()))
             
             self.request.session["preview_css"] = settings.MEDIA_URL + css_file_path(instance, instance.name + "_preview.css")
             self.request.session["preview_path"] = preview

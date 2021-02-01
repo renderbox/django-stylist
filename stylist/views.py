@@ -76,7 +76,7 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
             content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
             preview = default_storage.save(filename, ContentFile(content.encode()))
             
-            self.request.session["preview_css"] = settings.MEDIA_URL + filename
+            self.request.session["preview_css"] = default_storage.url(preview)
             self.request.session["preview_path"] = preview
             os.remove(custom_vars.name)
         return redirect(self.get_success_url())

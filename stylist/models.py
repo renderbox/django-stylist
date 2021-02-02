@@ -85,8 +85,9 @@ class Style(models.Model):
                 string = google_fonts + string
             custom_vars.write(string)
             custom_vars.seek(0)
-            
-            self.css_file.save(self.name + ".css", ContentFile(sass.compile(filename=STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])))
+
+            content = sass.compile(filename=STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
+            self.css_file.save(self.name + ".css", ContentFile(content.encode()))
             os.remove(custom_vars.name)
 
 

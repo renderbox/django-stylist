@@ -26,6 +26,24 @@
                         <li>
                             <a href="{% url 'stylist:stylist-delete' style.uuid %}" data-toggle="modal" data-target="#form_modal"> Delete </a>
                         </li>
+                        <li>
+                            <form method="POST" id="preview-form-{{style.id}}" action="{% url 'stylist:stylist-preview' style.uuid %}" target="_blank">
+                                {% csrf_token %}
+                                <input type="hidden" name="name" value="{{style.name}}">
+                                {% for key, value in style.attrs.items %}
+                                <input type="hidden" name="{{key}}" value="{{value}}">
+                                {% endfor %}
+                                <a href="#" onClick="document.getElementById('preview-form-{{style.id}}').submit();"> Preview </a>
+                            </form>
+                        </li>
+                        <li>
+                            <form method="POST" id="duplicate-form-{{style.id}}" action="{% url 'api-duplicate-style' style.uuid %}">
+                                {% csrf_token %}
+                                {{ form.name.as_hidden }}
+                                {{ form.enabled.as_hidden }}
+                                <a href="#" onClick="document.getElementById('duplicate-form-{{style.id}}').submit();"> Duplicate </a>
+                            </form>
+                        </li>
                     </ul>
                 </li>
                 {% endfor %}

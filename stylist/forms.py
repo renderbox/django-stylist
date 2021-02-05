@@ -125,7 +125,7 @@ class StyleEditForm(forms.ModelForm):
             for field in self.changed_data:
                 if field != "name": 
                     instance.attrs[field] = self.cleaned_data[field]
-            if len(self.changed_data) > 0 or self.changed_data[0] != "name":
+            if len(self.changed_data) > 1 or self.changed_data[0] != "name":
                 instance.save()
                 instance.compile_attrs()
         return instance

@@ -23,6 +23,12 @@ class StylistIndexView(LoginRequiredMixin, ListView):
     template_name = "stylist/index.html"
     model = Style
 
+    def get_queryset(self):
+        site_id = settings.SITE_ID
+        if hasattr(self.request, 'site'):
+            site_id = self.request.site.id
+        return Style.objects.filter(site=site_id)
+
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data()
         context["form"] = StyleForm

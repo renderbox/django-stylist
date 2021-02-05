@@ -159,3 +159,23 @@ class StylistClientTests(TestCase):
             print(response.status_code)
             print(response.content.decode('utf-8'))
             raise
+
+
+    def test_style_duplicate(self):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+            self.assertEquals(Style.objects.all().count(), 1)
+            
+            url = reverse("api-duplicate-style", kwargs={"uuid": style.uuid})
+            response = self.client.post(url, {"name": style.name, "enabled": False}, follow=True)
+
+            self.assertEquals(Style.objects.all().count(), 2)
+            new_style = Style.objects.all().last()
+            self.assertEquals(new_style.name, "Test copy")
+            self.assertEquals(new_style.attrs, style.attrs)
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise

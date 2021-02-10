@@ -11,7 +11,10 @@ class StyleCreateAPIView(CreateAPIView):
      serializer_class = StyleSerializer
 
      def perform_create(self, serializer):
-          site = Site.objects.get_current()
+          if getattr(self.request, "site", None):
+               site = self.request.site
+          else:
+               site = Site.objects.get_current()
           instance = serializer.save(site=site)
           instance.compile_attrs()
 
@@ -30,7 +33,10 @@ class StyleDuplicateAPIView(CreateAPIView):
 
      def perform_create(self, serializer):
           previous = Style.objects.get(uuid=self.kwargs["uuid"])
-          site = Site.objects.get_current()
+          if getattr(self.request, "site", None):
+               site = self.request.site
+          else:
+               site = Site.objects.get_current()
           new_name = previous.name + " copy"
           instance = serializer.save(site=site, attrs=previous.attrs, name=new_name)
           instance.compile_attrs()

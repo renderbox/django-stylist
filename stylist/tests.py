@@ -129,7 +129,7 @@ class StylistClientTests(TestCase):
             data = style.attrs
             data["name"] = style.name
             response = self.client.post(url, data, follow=True)
-            self.assertEquals(response.context["preview_style"], settings.MEDIA_URL + "site/" + site.domain + "/style/Test_preview.css")
+            self.assertIn(settings.MEDIA_URL + "site/" + site.domain + "/style/Test_preview.css", response.context["preview_style"])
 
             # cleanup preview file
             path = self.client.session["preview_path"]

@@ -11,6 +11,7 @@ from django.shortcuts import reverse, redirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView, ListView, UpdateView, DeleteView
 
+from datetime import datetime
 from tempfile import gettempdir
 
 from .forms import StyleForm, StyleEditForm, ActiveStyleForm
@@ -77,12 +78,16 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
             instance = Style.objects.get(uuid=self.kwargs["uuid"])
 
             filename = css_file_path(instance, instance.name + "_preview.css")
-            if default_storage.exists(filename):
-                default_storage.delete(filename)
+
+            # if a preview is currently active, delete the old file
+            if self.request.session.get("preview_path"):
+                default_storage.delete(self.request.session["preview_path"])
             content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
             preview = default_storage.save(filename, ContentFile(content.encode()))
-            
-            self.request.session["preview_css"] = default_storage.url(preview)
+
+            # bust cache to always use the most recent preview file
+            timestamp = "?" + str(int(datetime.utcnow().timestamp()))
+            self.request.session["preview_css"] = default_storage.url(preview) + timestamp
             self.request.session["preview_path"] = preview
             os.remove(custom_vars.name)
         return redirect(self.get_success_url())

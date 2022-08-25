@@ -1,5 +1,4 @@
 import os
-import sass
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -16,28 +15,6 @@ from tempfile import gettempdir
 
 from .forms import StyleForm, StyleEditForm, ActiveStyleForm
 from .models import Style, css_file_path
-
-def build_scss(self, data = {}):
-    with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
-        string = ""
-        google_fonts = "@import url('https://fonts.googleapis.com/css2?family="
-        num_fonts = 0
-        for key in data:
-            if key != "name":
-                string += "$" + key + ": " + data[key] + ";\n"
-                if settings.STYLE_SCHEMA[key]["type"] == "font":
-                    if num_fonts > 0:
-                        google_fonts += "&family="
-                    google_fonts += data[key].replace(" ", "+")
-                    google_fonts += ":wght@100;200;300;400;500;600;700;800;900"
-                    num_fonts += 1
-        if num_fonts > 0:
-            google_fonts += "&display=swap');\n"
-            string = google_fonts + string
-        custom_vars.write(string)
-        custom_vars.seek(0)
-        
-        return custom_vars
 
 class StylistIndexView(LoginRequiredMixin, ListView):
     """
@@ -78,23 +55,7 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        custom_vars = build_scss(self, form.cleaned_data)
-        
-        instance = Style.objects.get(uuid=self.kwargs["uuid"])
-        filename = css_file_path(instance, instance.name + "_preview.css")
-
-        # if a preview is currently active, delete the old file
-        if self.request.session.get("preview_path"):
-            default_storage.delete(self.request.session["preview_path"])
-        content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
-        preview = default_storage.save(filename, ContentFile(content.encode()))
-
-        # bust cache to always use the most recent preview file
-        timestamp = "?" + str(int(datetime.utcnow().timestamp()))
-        self.request.session["preview_css"] = default_storage.url(preview) + timestamp
-        self.request.session["preview_path"] = preview
-        os.remove(custom_vars.name)
-        
+        self.request.session["preview_css"] = Style.objects.get(uuid=self.kwargs["uuid"]).attrs
         return redirect(self.get_success_url())
 
 
@@ -157,3 +118,4 @@ def end_preview(request):
     if preview_path:
         default_storage.delete(preview_path)
     return redirect(request.META.get('HTTP_REFERER'))
+

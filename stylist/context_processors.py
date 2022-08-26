@@ -35,6 +35,7 @@ def get_custom_styles(request):
 
     except:
         custom_style = None
+        custom_font_import = None
     try:
         css_attrs = request.session.get("preview_css")
         preview_style = add_rgb_colors(css_attrs)

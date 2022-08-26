@@ -1,5 +1,5 @@
 from django.contrib.sites.models import Site
-
+from django.conf import settings
 from .models import Style
 
 # ---------------
@@ -12,8 +12,9 @@ def add_rgb_colors(css_attrs):
         if value['type'] == 'color':
             hex = css_attrs[key].lstrip("#")
             css_attrs[f"{key}-rgb"] = ",".join(tuple(str(int(hex[i:i+2], 16)) for i in (0, 2, 4)))
+    return css_attrs
 
-def get_font_families(css_attrs)
+def get_font_families(css_attrs):
     ## adds import strings for google fonts
     font_keys = [ key for key, value in settings.STYLE_SCHEMA.items() if value['type'] == 'font' ]
     font_import = ""

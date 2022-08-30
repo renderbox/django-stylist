@@ -126,14 +126,11 @@ class StylistClientTests(TestCase):
             style = Style.objects.create(name="Test", enabled=False, site=site)
 
             url = reverse("stylist:stylist-preview", kwargs={"uuid": style.uuid})
-            data = style.attrs
+            data = {}
             data["name"] = style.name
+            data = {**data , **style.attrs}
             response = self.client.post(url, data, follow=True)
-            self.assertIn(settings.MEDIA_URL + "site/" + site.domain + "/style/Test_preview.css", response.context["preview_style"])
-
-            # cleanup preview file
-            path = self.client.session["preview_path"]
-            default_storage.delete(path)
+            self.assertDictEqual(add_rgb_colors(data), response.context["preview_style"])
         except:
             print("")
             print(response.status_code)

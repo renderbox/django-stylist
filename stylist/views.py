@@ -55,7 +55,7 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        self.request.session["preview_css"] = Style.objects.get(uuid=self.kwargs["uuid"]).attrs
+        self.request.session["preview_css"] = form.cleaned_data
         return redirect(self.get_success_url())
 
 

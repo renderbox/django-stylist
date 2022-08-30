@@ -9,6 +9,8 @@ from django.core.files.storage import default_storage
 from django.core.management import call_command
 from django.test import TestCase, Client
 from django.urls import reverse
+from stylist.context_processors import add_rgb_colors
+
 
 from stylist.models import Style
 

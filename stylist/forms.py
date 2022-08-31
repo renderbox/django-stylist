@@ -127,6 +127,6 @@ class StyleEditForm(forms.ModelForm):
                     instance.attrs[field] = self.cleaned_data[field]
             if len(self.changed_data) > 1 or self.changed_data[0] != "name":
                 instance.save()
-                if not settings.STYLIST_IGNORE_SASS:
+                if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
                     instance.compile_attrs()
         return instance

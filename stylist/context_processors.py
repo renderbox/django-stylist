@@ -31,7 +31,7 @@ def get_custom_styles(request):
         
     try:
         style = Style.objects.filter(site=site).get(enabled=True)
-        if settings.STYLIST_IGNORE_SASS:
+        if getattr(settings, 'STYLIST_IGNORE_SASS', False):
             css_attrs = Style.objects.filter(site=site).get(enabled=True).attrs
             custom_style = add_rgb_colors(css_attrs)
             custom_font_import = get_font_families(css_attrs)
@@ -44,7 +44,7 @@ def get_custom_styles(request):
         custom_style = None
         custom_font_import = None
     try:
-        if settings.STYLIST_IGNORE_SASS:
+        if getattr(settings, 'STYLIST_IGNORE_SASS', False):
             css_attrs = request.session.get("preview_css")
             preview_style = add_rgb_colors(css_attrs)
             preview_font_import = get_font_families(css_attrs)

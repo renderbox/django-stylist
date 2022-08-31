@@ -78,22 +78,25 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        custom_vars = build_scss(self, form.cleaned_data)
-        
-        instance = Style.objects.get(uuid=self.kwargs["uuid"])
-        filename = css_file_path(instance, instance.name + "_preview.css")
+        if getattr(settings, 'STYLIST_IGNORE_SASS', False):
+            self.request.session["preview_css"] = form.cleaned_data
+        else:
+            custom_vars = build_scss(self, form.cleaned_data)
+            
+            instance = Style.objects.get(uuid=self.kwargs["uuid"])
+            filename = css_file_path(instance, instance.name + "_preview.css")
 
-        # if a preview is currently active, delete the old file
-        if self.request.session.get("preview_path"):
-            default_storage.delete(self.request.session["preview_path"])
-        content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
-        preview = default_storage.save(filename, ContentFile(content.encode()))
+            # if a preview is currently active, delete the old file
+            if self.request.session.get("preview_path"):
+                default_storage.delete(self.request.session["preview_path"])
+            content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
+            preview = default_storage.save(filename, ContentFile(content.encode()))
 
-        # bust cache to always use the most recent preview file
-        timestamp = "?" + str(int(datetime.utcnow().timestamp()))
-        self.request.session["preview_css"] = default_storage.url(preview) + timestamp
-        self.request.session["preview_path"] = preview
-        os.remove(custom_vars.name)
+            # bust cache to always use the most recent preview file
+            timestamp = "?" + str(int(datetime.utcnow().timestamp()))
+            self.request.session["preview_css"] = default_storage.url(preview) + timestamp
+            self.request.session["preview_path"] = preview
+            os.remove(custom_vars.name)
         
         return redirect(self.get_success_url())
 

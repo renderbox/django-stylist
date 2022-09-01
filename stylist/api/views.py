@@ -1,4 +1,5 @@
 from rest_framework.generics import CreateAPIView
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.shortcuts import redirect
 
@@ -16,7 +17,8 @@ class StyleCreateAPIView(CreateAPIView):
           else:
                site = Site.objects.get_current()
           instance = serializer.save(site=site)
-          instance.compile_attrs()
+          if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+               instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):
                instance.enabled = True
@@ -39,7 +41,8 @@ class StyleDuplicateAPIView(CreateAPIView):
                site = Site.objects.get_current()
           new_name = previous.name + " copy"
           instance = serializer.save(site=site, attrs=previous.attrs, name=new_name)
-          instance.compile_attrs()
+          if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+               instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):
                instance.enabled = True

@@ -3,7 +3,7 @@ import re
 from django import forms
 from django.conf import settings
 from django.contrib.sites.models import Site
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ImproperlyConfigured
 
 from stylist.models import Style
 
@@ -66,6 +66,13 @@ class StyleEditForm(forms.ModelForm):
                     self.clean_rem(key)
                 elif settings.STYLE_SCHEMA[key]["type"] == "px":
                     self.clean_px(key)
+        
+        if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+            try:
+                import sass
+            except ModuleNotFoundError as err:
+                self.add_error(None, ImproperlyConfigured("Improperly Configured: Please reinstall django-stylist with `pip install django-stylist[sass]`"))
+
         return cleaned_data
 
     # clean key types

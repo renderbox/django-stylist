@@ -1,5 +1,5 @@
 import os
-
+from unittest.mock import patch
 from io import StringIO
 
 from django.conf import settings
@@ -12,6 +12,12 @@ from django.urls import reverse
 
 from stylist.models import Style
 
+orig_import = __import__
+
+def import_mock(name, *args):
+    if name == 'sass':
+        raise ModuleNotFoundError("No module named 'sass'")
+    return orig_import(name, *args)
 # Create your tests here.
 class ModuleTests(TestCase):
     '''
@@ -36,6 +42,7 @@ class StylistClientTests(TestCase):
     Client tests for Stylist and the Style model
     '''
     def setUp(self):
+        super().setUp()
         self.client = Client()
         self.user = get_user_model().objects.create(username="testuser")
         self.client.force_login(self.user)
@@ -89,7 +96,27 @@ class StylistClientTests(TestCase):
             print(response.status_code)
             print(response.content.decode('utf-8'))
             raise
+    
+    @patch('builtins.__import__', side_effect=import_mock)
+    def test_style_update_without_sass_installed(self, import_sass_mock):
+        try:
+            site = Site.objects.get_current()
+            style = Style.objects.create(name="Test", enabled=False, site=site)
+            url = reverse("stylist:stylist-edit", kwargs={"uuid": style.uuid})
+            
+            data = style.attrs
+            data["name"] = "Updated"
+            data["primary"] = "#FF0000"
+            response = self.client.post(url, data, follow=True)
 
+            self.assertContains(response, "Improperly Configured: Please reinstall django-stylist with `pip install django-stylist[sass]`")
+            
+        except:
+            print("")
+            print(response.status_code)
+            print(response.content.decode('utf-8'))
+            raise
+   
     def test_style_delete(self):
         try:
             style = Style.objects.create(name="Test", enabled=True)

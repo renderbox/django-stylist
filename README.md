@@ -5,3 +5,7 @@
 # Stylist
 
 App for updating and manipulating SASS/SCSS compiling on the fly
+
+## Installation Options
+Full install if you need to compile sass on the fly: `pip install django-stylist[sass]`
+If you just need the model to store style values: `pip install django-stylist`

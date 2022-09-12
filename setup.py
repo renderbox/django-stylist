@@ -47,9 +47,11 @@ setup(
     install_requires=[
         'Django>=3.0,<4.1',
         'django-autoslug',
-        'libsass',
     ],
     extras_require={
+        'sass': [
+            'libsass'
+        ],
         'dev': [                            # Packages needed by developers
             'django-crispy-forms',
             'django-allauth',

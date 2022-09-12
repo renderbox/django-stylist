@@ -5,6 +5,7 @@ from io import StringIO
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import default_storage
 from django.core.management import call_command
 from django.test import TestCase, Client
@@ -18,6 +19,7 @@ def import_mock(name, *args):
     if name == 'sass':
         raise ModuleNotFoundError("No module named 'sass'")
     return orig_import(name, *args)
+
 # Create your tests here.
 class ModuleTests(TestCase):
     '''
@@ -206,3 +208,10 @@ class StylistClientTests(TestCase):
             print(response.status_code)
             print(response.content.decode('utf-8'))
             raise
+
+class StylistModelTests(TestCase):
+
+    @patch('builtins.__import__', side_effect=import_mock)
+    def test_compile_attrs_raises_exception_without_sass(self, import_sass_mock):
+        style = Style.objects.create(name='No Sass', attrs={'primary': 'blue'}, enabled=True)
+        self.assertRaisesMessage(ImproperlyConfigured, "Please reinstall django-stylist with `pip install django-stylist[sass]`", style.compile_attrs)

@@ -1,9 +1,9 @@
 import uuid
-import sass
 import os
 
 from django.conf import settings
 from django.core.files.base import ContentFile
+from django.core.exceptions import ImproperlyConfigured
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -68,6 +68,11 @@ class Style(models.Model):
         return self.css_file.url
 
     def compile_attrs(self):
+        try:
+            import sass
+        except ModuleNotFoundError as err:
+            raise ImproperlyConfigured("Please reinstall django-stylist with `pip install django-stylist[sass]`") from err
+            
         with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
             string = ""
             google_fonts = "@import url('https://fonts.googleapis.com/css2?family="

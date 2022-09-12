@@ -56,7 +56,7 @@ class Style(models.Model):
         verbose_name_plural = _( "Site Styles")
 
     def __str__(self):
-        return "{}: {}".format(self.site.name, self.name)
+        return "{}: {}".format(getattr(self.site, 'name', ''), self.name)
 
     def get_absolute_url(self):
         return reverse( "stylist:stylist-edit", kwargs={"uuid": self.uuid})

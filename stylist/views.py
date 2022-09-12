@@ -1,5 +1,4 @@
 import os
-import sass
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -81,6 +80,8 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
         if getattr(settings, 'STYLIST_IGNORE_SASS', False):
             self.request.session["preview_css"] = form.cleaned_data
         else:
+            import sass
+            
             custom_vars = build_scss(self, form.cleaned_data)
             
             instance = Style.objects.get(uuid=self.kwargs["uuid"])

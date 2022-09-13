@@ -77,7 +77,7 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        if getattr(settings, 'STYLIST_IGNORE_SASS', False):
+        if getattr(settings, 'STYLIST_IGNORE_SASS', True):
             self.request.session["preview_css"] = form.cleaned_data
         else:
             import sass

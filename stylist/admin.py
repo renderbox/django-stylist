@@ -17,7 +17,7 @@ class StyleAdmin(admin.ModelAdmin):
     
     def __init__(self, model=Style, admin_site=admin.site) -> None:
         super().__init__(model, admin_site)
-        if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+        if not getattr(settings, 'STYLIST_IGNORE_SASS', True):
             self.actions.append(compile_styles)
 
 admin.site.register(Style, StyleAdmin)

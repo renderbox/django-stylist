@@ -67,7 +67,7 @@ class StyleEditForm(forms.ModelForm):
                 elif settings.STYLE_SCHEMA[key]["type"] == "px":
                     self.clean_px(key)
         
-        if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+        if not getattr(settings, 'STYLIST_IGNORE_SASS', True):
             try:
                 import sass
             except ModuleNotFoundError as err:
@@ -134,6 +134,6 @@ class StyleEditForm(forms.ModelForm):
                     instance.attrs[field] = self.cleaned_data[field]
             if len(self.changed_data) > 1 or self.changed_data[0] != "name":
                 instance.save()
-                if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+                if not getattr(settings, 'STYLIST_IGNORE_SASS', True):
                     instance.compile_attrs()
         return instance

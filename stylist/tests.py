@@ -8,7 +8,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import default_storage
 from django.core.management import call_command
-from django.test import TestCase, Client
+from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 
 from stylist.models import Style
@@ -38,7 +38,7 @@ class ModuleTests(TestCase):
             except:
                 self.fail("\n\nHey, There are missing migrations!\n\n %s" % output.getvalue())
 
-
+@override_settings(STYLIST_IGNORE_SASS=False)
 class StylistClientTests(TestCase):
     '''
     Client tests for Stylist and the Style model
@@ -209,6 +209,7 @@ class StylistClientTests(TestCase):
             print(response.content.decode('utf-8'))
             raise
 
+@override_settings(STYLIST_IGNORE_SASS=False)
 class StylistModelTests(TestCase):
 
     @patch('builtins.__import__', side_effect=import_mock)

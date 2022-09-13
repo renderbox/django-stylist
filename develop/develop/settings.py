@@ -148,7 +148,7 @@ MEDIA_URL = "/media/"
 # STYLIST_DEFAULT_CSS = STATIC_URL + "css/default.css"
 STYLIST_DEFAULT_CSS = os.path.join(MEDIA_ROOT, "css/default.css")
 STYLIST_SCSS_TEMPLATE = os.path.join(BASE_DIR, "scss/base_template.scss")
-STYLIST_IGNORE_SASS = False
+STYLIST_IGNORE_SASS = True
 STYLE_SCHEMA = {
     "primary": {
         "type": "color",

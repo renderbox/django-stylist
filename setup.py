@@ -58,7 +58,7 @@ setup(
             'django-extensions',
             'djangorestframework',
         ],
-        'test': [],                         # Packages needed to run tests
+        'test': ['libsass'],                         # Packages needed to run tests
         'prod': [],                         # Packages needed to run in the deployment
         'build': [                          # Packages needed to build the package
             'setuptools',

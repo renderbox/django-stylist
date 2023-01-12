@@ -17,7 +17,7 @@ class StyleCreateAPIView(CreateAPIView):
           else:
                site = Site.objects.get_current()
           instance = serializer.save(site=site)
-          if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+          if not getattr(settings, 'STYLIST_IGNORE_SASS', True):
                instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):
@@ -41,7 +41,7 @@ class StyleDuplicateAPIView(CreateAPIView):
                site = Site.objects.get_current()
           new_name = previous.name + " copy"
           instance = serializer.save(site=site, attrs=previous.attrs, name=new_name)
-          if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+          if not getattr(settings, 'STYLIST_IGNORE_SASS', True):
                instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):

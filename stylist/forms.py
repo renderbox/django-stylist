@@ -2,10 +2,10 @@ import re
 
 from django import forms
 from django.conf import settings
-from django.contrib.sites.models import Site
 from django.core.exceptions import ValidationError, ImproperlyConfigured
 
-from stylist.models import Style
+from .models import Style
+from .settings import app_settings
 
 class StyleForm(forms.ModelForm):
 
@@ -67,11 +67,11 @@ class StyleEditForm(forms.ModelForm):
                 elif settings.STYLE_SCHEMA[key]["type"] == "px":
                     self.clean_px(key)
         
-        if not getattr(settings, 'STYLIST_IGNORE_SASS', True):
+        if app_settings.USE_SASS:
             try:
                 import sass
             except ModuleNotFoundError as err:
-                self.add_error(None, ImproperlyConfigured("Improperly Configured: Please reinstall django-stylist with `pip install django-stylist[sass]`"))
+                self.add_error(None, ImproperlyConfigured("Improperly Configured: Please reinstall django-stylist with `pip install django-stylist[sass]` to add sass support"))
 
         return cleaned_data
 
@@ -134,6 +134,6 @@ class StyleEditForm(forms.ModelForm):
                     instance.attrs[field] = self.cleaned_data[field]
             if len(self.changed_data) > 1 or self.changed_data[0] != "name":
                 instance.save()
-                if not getattr(settings, 'STYLIST_IGNORE_SASS', True):
+                if app_settings.USE_SASS:
                     instance.compile_attrs()
         return instance

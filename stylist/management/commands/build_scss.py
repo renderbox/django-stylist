@@ -18,7 +18,7 @@ class Command(BaseCommand):
         try:
             import sass
         except ModuleNotFoundError as err:
-            raise Exception("Please reinstall django-stylist with `pip install django-stylist[sass]`") from err
+            raise Exception("Please reinstall django-stylist with `pip install django-stylist[sass]` to add sass support") from err
         
         custom_vars = build_scss(self, data)
         

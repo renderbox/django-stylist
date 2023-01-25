@@ -12,4 +12,4 @@ If you just need the model to store style values: `pip install django-stylist`
 
 ## Upgrading from from 0.1.x
 
-Legacy users should add the setting STYLIST_IGNORE_SASS = False should they choose to continue compiling sass files.
+Legacy users should add the setting STYLIST_USE_SASS = True should they choose to continue compiling sass files.

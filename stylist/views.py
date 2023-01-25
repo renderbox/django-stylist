@@ -15,6 +15,7 @@ from tempfile import gettempdir
 
 from .forms import StyleForm, StyleEditForm, ActiveStyleForm
 from .models import Style, css_file_path
+from .settings import app_settings
 
 def build_scss(self, data = {}):
     with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
@@ -77,9 +78,7 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        if getattr(settings, 'STYLIST_IGNORE_SASS', True):
-            self.request.session["preview_css"] = form.cleaned_data
-        else:
+        if app_settings.USE_SASS:
             import sass
             
             custom_vars = build_scss(self, form.cleaned_data)
@@ -98,7 +97,8 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
             self.request.session["preview_css"] = default_storage.url(preview) + timestamp
             self.request.session["preview_path"] = preview
             os.remove(custom_vars.name)
-        
+        else:
+            self.request.session["preview_css"] = form.cleaned_data
         return redirect(self.get_success_url())
 
 

@@ -71,7 +71,7 @@ class Style(models.Model):
         try:
             import sass
         except ModuleNotFoundError as err:
-            raise ImproperlyConfigured("Please reinstall django-stylist with `pip install django-stylist[sass]`") from err
+            raise ImproperlyConfigured("Please reinstall django-stylist with `pip install django-stylist[sass]` to add sass support") from err
             
         with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
             string = ""

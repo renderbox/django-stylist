@@ -38,7 +38,7 @@ class ModuleTests(TestCase):
             except:
                 self.fail("\n\nHey, There are missing migrations!\n\n %s" % output.getvalue())
 
-@override_settings(STYLIST_IGNORE_SASS=False)
+@override_settings(STYLIST_USE_SASS=True)
 class StylistClientTests(TestCase):
     '''
     Client tests for Stylist and the Style model
@@ -111,7 +111,7 @@ class StylistClientTests(TestCase):
             data["primary"] = "#FF0000"
             response = self.client.post(url, data, follow=True)
 
-            self.assertContains(response, "Improperly Configured: Please reinstall django-stylist with `pip install django-stylist[sass]`")
+            self.assertContains(response, "Improperly Configured: Please reinstall django-stylist with `pip install django-stylist[sass]` to add sass support")
             
         except:
             print("")
@@ -209,7 +209,7 @@ class StylistClientTests(TestCase):
             print(response.content.decode('utf-8'))
             raise
 
-@override_settings(STYLIST_IGNORE_SASS=False)
+@override_settings(STYLIST_USE_SASS=True)
 class StylistModelTests(TestCase):
 
     @patch('builtins.__import__', side_effect=import_mock)

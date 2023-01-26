@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 
 from stylist.models import Style 
 from stylist.api.serializers import StyleSerializer
+from stylist.settings import app_settings
 
 
 class StyleCreateAPIView(CreateAPIView):
@@ -17,7 +18,7 @@ class StyleCreateAPIView(CreateAPIView):
           else:
                site = Site.objects.get_current()
           instance = serializer.save(site=site)
-          if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+          if app_settings.USE_SASS:
                instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):
@@ -41,7 +42,7 @@ class StyleDuplicateAPIView(CreateAPIView):
                site = Site.objects.get_current()
           new_name = previous.name + " copy"
           instance = serializer.save(site=site, attrs=previous.attrs, name=new_name)
-          if not getattr(settings, 'STYLIST_IGNORE_SASS', False):
+          if app_settings.USE_SASS:
                instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):

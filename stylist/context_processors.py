@@ -2,6 +2,7 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 
 from .models import Style
+from .settings import app_settings
 
 def add_rgb_colors(css_attrs):
      ## adds rgb values for all colors
@@ -31,26 +32,25 @@ def get_custom_styles(request):
         
     try:
         style = Style.objects.filter(site=site).get(enabled=True)
-        if getattr(settings, 'STYLIST_IGNORE_SASS', False):
-            css_attrs = Style.objects.filter(site=site).get(enabled=True).attrs
-            custom_style = add_rgb_colors(css_attrs)
-            custom_font_import = get_font_families(css_attrs)
-        else:
+        if app_settings.USE_SASS:
             custom_style = style.css_file.url
             custom_font_import = None
-
+        else:
+            css_attrs = style.attrs
+            custom_style = add_rgb_colors(css_attrs)
+            custom_font_import = get_font_families(css_attrs)
         
     except:
         custom_style = None
         custom_font_import = None
     try:
-        if getattr(settings, 'STYLIST_IGNORE_SASS', False):
+        if app_settings.USE_SASS:
+            preview_style = request.session.get("preview_css")
+            preview_font_import = None
+        else:
             css_attrs = request.session.get("preview_css")
             preview_style = add_rgb_colors(css_attrs)
             preview_font_import = get_font_families(css_attrs)
-        else:
-            preview_style = request.session.get("preview_css")
-            preview_font_import = None
     except:
         preview_style = None
         preview_font_import = None

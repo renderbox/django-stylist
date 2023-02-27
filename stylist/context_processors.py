@@ -54,7 +54,7 @@ def get_custom_styles(request):
     except:
         preview_style = None
         preview_font_import = None
-        
+
 
     return {
         'custom_style': custom_style,

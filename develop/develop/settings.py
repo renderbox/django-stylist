@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
 ]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = ["boostrap4", "bootstrap5"]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 AUTHENTICATION_BACKENDS = [

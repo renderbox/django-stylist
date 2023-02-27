@@ -55,13 +55,10 @@ def get_custom_styles(request):
         preview_style = None
         preview_font_import = None
 
-    preview_uuid = request.session.get("preview_uuid")
-
     return {
         'custom_style': custom_style,
         'custom_font_import': custom_font_import,
         'preview_style': preview_style,
-        'preview_font_import': preview_font_import,
-        'preview_uuid': preview_uuid
+        'preview_font_import': preview_font_import
     }
 

@@ -53,7 +53,7 @@ setup(
             'libsass'
         ],
         'dev': [                            # Packages needed by developers
-            'django-crispy-forms',
+            'django-crispy-forms<2.0',
             'django-allauth',
             'django-extensions',
             'djangorestframework',

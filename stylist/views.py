@@ -99,6 +99,8 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
             os.remove(custom_vars.name)
         else:
             self.request.session["preview_css"] = form.cleaned_data
+
+        self.request.session["preview_uuid"] = str(self.kwargs["uuid"])
         return redirect(self.get_success_url())
 
 
@@ -156,8 +158,9 @@ class StylistDeleteView(LoginRequiredMixin, DeleteView):
 # Ends preview mode
 @login_required
 def end_preview(request):
-    preview = request.session.pop("preview_css", None)
     preview_path = request.session.pop("preview_path", None)
+    request.session.pop("preview_css", None)
+    request.session.pop("preview_uuid", None)
     if preview_path:
         default_storage.delete(preview_path)
     return redirect(request.META.get('HTTP_REFERER'))

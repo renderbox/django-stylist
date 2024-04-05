@@ -16,4 +16,4 @@ class StyleSerializer(serializers.ModelSerializer):
 class FontSerializer(serializers.ModelSerializer):
     class Meta:
         model = Font
-        fields = ("family", "weights", "href")
+        fields = ("pk", "family", "weights", "href")

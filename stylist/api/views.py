@@ -52,11 +52,12 @@ class StyleDuplicateAPIView(CreateAPIView):
           response = super().create(request, *args, **kwargs)
           return redirect('stylist:stylist-index')
 
-
+class FontPagination(PageNumberPagination):
+    page_size = 20
+    
 class FontViewset(
-    mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet
+   viewsets.ReadOnlyModelViewSet
 ):
     queryset = Font.objects.all()
     serializer_class = FontSerializer
-    pagination_class = PageNumberPagination
-    page_size = 20
+    pagination_class = FontPagination

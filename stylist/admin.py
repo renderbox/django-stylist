@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Style
+from .models import Style, Font
 
 
 def compile_styles(modeladmin, request, queryset):
@@ -16,4 +16,11 @@ class StyleAdmin(admin.ModelAdmin):
     actions = [compile_styles]
 
 
+class FontAdmin(admin.ModelAdmin):
+    list_display = ('id', 'family', 'provider', 'preferred')
+    list_filter = ('preferred',)
+    search_fields = ('family',)
+
+    
+admin.site.register(Font, FontAdmin)
 admin.site.register(Style, StyleAdmin)

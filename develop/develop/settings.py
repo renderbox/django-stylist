@@ -25,6 +25,8 @@ SECRET_KEY = '&1mmk1e%&9p87fvr=&v84u6fx1)$7f&%)*t9#$zfnu$#h#+5v^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+GOOGLE_WEBFONTS_KEY = os.getenv("GOOGLE_WEBFONTS_KEY", "")
+
 ALLOWED_HOSTS = []
 
 SITE_ID = 1

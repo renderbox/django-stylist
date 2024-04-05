@@ -1,5 +1,4 @@
 import os
-import sass
 
 from django.conf import settings
 from django.contrib.staticfiles.storage import staticfiles_storage
@@ -16,6 +15,10 @@ class Command(BaseCommand):
         data = {}
         for key, entry in settings.STYLE_SCHEMA.items():
             data[key] = entry['default']
+        try:
+            import sass
+        except ModuleNotFoundError as err:
+            raise Exception("Please reinstall django-stylist with `pip install django-stylist[sass]` to add sass support") from err
         
         custom_vars = build_scss(self, data)
         

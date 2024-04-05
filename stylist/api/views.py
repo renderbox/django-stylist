@@ -1,12 +1,15 @@
+from django.conf import settings
+from django.contrib.sites.models import Site
+from django.shortcuts import redirect
+
 from rest_framework import viewsets, mixins
 from rest_framework.generics import CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 
-from django.contrib.sites.models import Site
-from django.shortcuts import redirect
 
 from stylist.models import Style, Font
 from stylist.api.serializers import StyleSerializer, FontSerializer
+from stylist.settings import app_settings
 
 
 class StyleCreateAPIView(CreateAPIView):
@@ -19,7 +22,8 @@ class StyleCreateAPIView(CreateAPIView):
           else:
                site = Site.objects.get_current()
           instance = serializer.save(site=site)
-          instance.compile_attrs()
+          if app_settings.USE_SASS:
+               instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):
                instance.enabled = True
@@ -42,7 +46,8 @@ class StyleDuplicateAPIView(CreateAPIView):
                site = Site.objects.get_current()
           new_name = previous.name + " copy"
           instance = serializer.save(site=site, attrs=previous.attrs, name=new_name)
-          instance.compile_attrs()
+          if app_settings.USE_SASS:
+               instance.compile_attrs()
 
           if not Style.objects.filter(site=site, enabled=True):
                instance.enabled = True

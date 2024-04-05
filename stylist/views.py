@@ -1,5 +1,4 @@
 import os
-import sass
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -16,6 +15,7 @@ from tempfile import gettempdir
 
 from .forms import StyleForm, StyleEditForm, ActiveStyleForm
 from .models import Style, css_file_path
+from .settings import app_settings
 
 def build_scss(self, data = {}):
     with open(gettempdir() + "/custom_vars.scss", "w+") as custom_vars:
@@ -78,23 +78,29 @@ class StylistPreviewView(LoginRequiredMixin, FormView):
         return context
 
     def form_valid(self, form):
-        custom_vars = build_scss(self, form.cleaned_data)
-        
-        instance = Style.objects.get(uuid=self.kwargs["uuid"])
-        filename = css_file_path(instance, instance.name + "_preview.css")
+        if app_settings.USE_SASS:
+            import sass
+            
+            custom_vars = build_scss(self, form.cleaned_data)
+            
+            instance = Style.objects.get(uuid=self.kwargs["uuid"])
+            filename = css_file_path(instance, instance.name + "_preview.css")
 
-        # if a preview is currently active, delete the old file
-        if self.request.session.get("preview_path"):
-            default_storage.delete(self.request.session["preview_path"])
-        content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
-        preview = default_storage.save(filename, ContentFile(content.encode()))
+            # if a preview is currently active, delete the old file
+            if self.request.session.get("preview_path"):
+                default_storage.delete(self.request.session["preview_path"])
+            content = sass.compile(filename=settings.STYLIST_SCSS_TEMPLATE, include_paths=[gettempdir()])
+            preview = default_storage.save(filename, ContentFile(content.encode()))
 
-        # bust cache to always use the most recent preview file
-        timestamp = "?" + str(int(datetime.utcnow().timestamp()))
-        self.request.session["preview_css"] = default_storage.url(preview) + timestamp
-        self.request.session["preview_path"] = preview
-        os.remove(custom_vars.name)
-        
+            # bust cache to always use the most recent preview file
+            timestamp = "?" + str(int(datetime.utcnow().timestamp()))
+            self.request.session["preview_css"] = default_storage.url(preview) + timestamp
+            self.request.session["preview_path"] = preview
+            os.remove(custom_vars.name)
+        else:
+            self.request.session["preview_css"] = form.cleaned_data
+
+        self.request.session["preview_uuid"] = str(self.kwargs["uuid"])
         return redirect(self.get_success_url())
 
 
@@ -152,8 +158,9 @@ class StylistDeleteView(LoginRequiredMixin, DeleteView):
 # Ends preview mode
 @login_required
 def end_preview(request):
-    preview = request.session.pop("preview_css", None)
     preview_path = request.session.pop("preview_path", None)
+    request.session.pop("preview_css", None)
+    request.session.pop("preview_uuid", None)
     if preview_path:
         default_storage.delete(preview_path)
     return redirect(request.META.get('HTTP_REFERER'))

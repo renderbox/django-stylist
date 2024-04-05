@@ -110,7 +110,7 @@ class Font(models.Model):
     class Meta:
         verbose_name = _("Font")
         verbose_name_plural = _("Fonts")
-        ordering = ["preferred", "family"]
+        ordering = ["-preferred", "family"]
 
     def __str__(self):
         return self.family

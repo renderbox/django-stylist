@@ -1,8 +1,7 @@
-from django.conf import settings
 from django.contrib.sites.models import Site
 from django.shortcuts import redirect
 
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets
 from rest_framework.generics import CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 

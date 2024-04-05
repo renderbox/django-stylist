@@ -1,7 +1,7 @@
 from django.contrib.sites.models import Site
 from django.shortcuts import redirect
 
-from rest_framework import viewsets
+from rest_framework import viewsets, filters
 from rest_framework.generics import CreateAPIView
 from rest_framework.pagination import PageNumberPagination
 
@@ -65,3 +65,5 @@ class FontViewset(
     queryset = Font.objects.all()
     serializer_class = FontSerializer
     pagination_class = FontPagination
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['family']

@@ -51,19 +51,19 @@ class StylistClientTests(TestCase):
     
     def test_style_creation_api(self):
         try:
-            self.assertEquals(Style.objects.all().count(), 0)
+            self.assertEqual(Style.objects.all().count(), 0)
             url = reverse("api-create-style")
             response = self.client.post(url, {"name": "Test", "enabled": "False"}, follow=True)
-            self.assertEquals(Style.objects.all().count(), 1)
+            self.assertEqual(Style.objects.all().count(), 1)
             
             style = Style.objects.get(pk=1)
             # since it's the only style, it should be enabled
-            self.assertEquals(style.enabled, True)
+            self.assertEqual(style.enabled, True)
 
             site = Site.objects.get_current()
-            self.assertEquals(style.site, site)
+            self.assertEqual(style.site, site)
             css_path = settings.MEDIA_ROOT + "/site/" + site.domain + "/style/Test.css"
-            self.assertEquals(style.css_file.path, css_path)
+            self.assertEqual(style.css_file.path, css_path)
             # remove the new file, leaving any preexisting files
             if(os.path.exists(css_path)):
                 os.remove(css_path)
@@ -85,8 +85,8 @@ class StylistClientTests(TestCase):
             response = self.client.post(url, data, follow=True)
 
             style.refresh_from_db()
-            self.assertEquals(style.name, "Updated")
-            self.assertEquals(style.attrs["primary"], "#FF0000")
+            self.assertEqual(style.name, "Updated")
+            self.assertEqual(style.attrs["primary"], "#FF0000")
             
             css_path = settings.MEDIA_ROOT + "/site/" + site.domain + "/style/Updated.css"
             # remove the new file, leaving any preexisting files
@@ -122,12 +122,12 @@ class StylistClientTests(TestCase):
     def test_style_delete(self):
         try:
             style = Style.objects.create(name="Test", enabled=True)
-            self.assertEquals(Style.objects.all().count(), 1)
+            self.assertEqual(Style.objects.all().count(), 1)
             
             url = reverse("stylist:stylist-delete", kwargs={"uuid": style.uuid})
             response = self.client.post(url, follow=True)
 
-            self.assertEquals(Style.objects.all().count(), 0)
+            self.assertEqual(Style.objects.all().count(), 0)
         except:
             print("")
             print(response.status_code)
@@ -141,7 +141,7 @@ class StylistClientTests(TestCase):
             url = reverse("stylist:stylist-make-active")
 
             response = self.client.post(url, {"active": 1}, follow=True)
-            self.assertEquals(response.context["active_theme"], style)
+            self.assertEqual(response.context["active_theme"], style)
         except:
             print("")
             print(response.status_code)
@@ -182,7 +182,7 @@ class StylistClientTests(TestCase):
 
             new_url = reverse("stylist:stylist-end-preview")
             new_response = self.client.get(new_url, HTTP_REFERER=reverse("stylist:stylist-index"), follow=True)
-            self.assertEquals(new_response.context.get("preview_style"), None)
+            self.assertEqual(new_response.context.get("preview_style"), None)
         except:
             print("")
             print(response.status_code)
@@ -194,15 +194,15 @@ class StylistClientTests(TestCase):
         try:
             site = Site.objects.get_current()
             style = Style.objects.create(name="Test", enabled=False, site=site)
-            self.assertEquals(Style.objects.all().count(), 1)
+            self.assertEqual(Style.objects.all().count(), 1)
             
             url = reverse("api-duplicate-style", kwargs={"uuid": style.uuid})
             response = self.client.post(url, {"name": style.name, "enabled": False}, follow=True)
 
-            self.assertEquals(Style.objects.all().count(), 2)
+            self.assertEqual(Style.objects.all().count(), 2)
             new_style = Style.objects.all().last()
-            self.assertEquals(new_style.name, "Test copy")
-            self.assertEquals(new_style.attrs, style.attrs)
+            self.assertEqual(new_style.name, "Test copy")
+            self.assertEqual(new_style.attrs, style.attrs)
         except:
             print("")
             print(response.status_code)

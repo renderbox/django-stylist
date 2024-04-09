@@ -2,7 +2,7 @@ import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from stylist.models import Font
-
+from stylist.utils import get_font_families
 
 def get_weights(variants):
     weights = []
@@ -21,33 +21,11 @@ class Command(BaseCommand):
             self.stdout.write(self.style.ERROR("No Google Webfonts Key found"))
             return None
 
-        r = requests.get(
-            url="https://www.googleapis.com/webfonts/v1/webfonts?key="
-            + settings.GOOGLE_WEBFONTS_KEY
-        )
-        r.raise_for_status()
-
-        items = r.json().get("items", {})
-        ids = []
-        for item in items:
-            family = item.get("family").strip()
-            family_url = family.replace(" ", "+")
-            defaults = {
-                "href": f"https://fonts.googleapis.com/css2?family={family_url}:wght@100;200;300;400;500;600;700;800;900&display=swap",
-                "weights": get_weights(item.get("variants", [])),
-            }
-
-            font, created = Font.objects.update_or_create(
-                defaults=defaults,
-                provider="google",
-                family=family,
-            )
+        deleted, db_updates = get_font_families()
+        for font, created in db_updates:
             if created:
-                self.stdout.write(self.style.SUCCESS(f"ADDED new font: {family}"))
+                self.stdout.write(self.style.SUCCESS(f"ADDED new font: {font}"))
             else:
-                self.stdout.write(self.style.SUCCESS(f"Updated font: {family}"))
+                self.stdout.write(self.style.SUCCESS(f"Updated font: {font}"))
 
-            ids.append(font.id)
-
-        deleted = Font.objects.exclude(id__in=ids).delete()
         self.stdout.write(self.style.SUCCESS(f"Deleted fonts not in list {deleted}"))

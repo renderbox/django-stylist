@@ -96,6 +96,30 @@ class Style(models.Model):
             os.remove(custom_vars.name)
 
 
+class Font(models.Model):
+    """
+    Model for Fonts
+    """
+
+    family = models.CharField(_("Font Family"), max_length=50)
+    href = models.URLField(_("URL"), max_length=200)
+    provider = models.CharField(_("Provider"), max_length=50, help_text="Ex: google")
+    meta = models.JSONField(
+        blank=True,
+        default=dict,
+        help_text="any extra meta data we'd like to store as json",
+    )
+    weights = models.JSONField(blank=True, default=list)
+    preferred = models.BooleanField(_("Preferred"), default=False)
+
+    class Meta:
+        verbose_name = _("Font")
+        verbose_name_plural = _("Fonts")
+        ordering = ["-preferred", "family"]
+
+    def __str__(self):
+        return self.family
+
 @receiver(post_save, sender=Style)
 def only_one_active_style(sender, instance, **kwargs):
     if instance.enabled:

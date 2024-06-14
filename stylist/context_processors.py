@@ -9,7 +9,7 @@ def add_rgb_colors(css_attrs):
      for key, value in settings.STYLE_SCHEMA.items():
          if value['type'] == 'color':
              hex = css_attrs[key].lstrip("#")
-             css_attrs[f"{key}-rgb"] = " ".join(tuple(str(int(hex[i:i+2], 16)) for i in (0, 2, 4)))
+             css_attrs[f"{key}-rgb"] = ",".join(tuple(str(int(hex[i:i+2], 16)) for i in (0, 2, 4)))
      return css_attrs
 
 def get_font_families(css_attrs):

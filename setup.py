@@ -57,7 +57,6 @@ setup(
             'django-allauth',
             'django-extensions',
             'djangorestframework',
-            'requests'
         ],
         'test': ['libsass'],                         # Packages needed to run tests
         'prod': [],                         # Packages needed to run in the deployment

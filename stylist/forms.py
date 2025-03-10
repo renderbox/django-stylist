@@ -47,9 +47,9 @@ class StyleEditForm(forms.ModelForm):
         for key in self.instance.attrs:
             self.fields[key] = forms.CharField(
                 required=True,
-                label=settings.STYLE_SCHEMA[key]["label"],
+                label=settings.STYLE_SCHEMA.get(key, {}).get("label", ""),
                 widget=forms.TextInput(
-                    attrs={'data-type': settings.STYLE_SCHEMA[key]["type"]}
+                    attrs={'data-type': settings.STYLE_SCHEMA.get(key, {}).get("type", "")}
                 )
             )
             self.fields[key].initial = self.instance.attrs[key]
@@ -57,14 +57,15 @@ class StyleEditForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         for key in list(cleaned_data):
+            data_type = settings.STYLE_SCHEMA.get(key, {}).get("type", "")
             if key != "name":
-                if settings.STYLE_SCHEMA[key]["type"] == "color":
+                if data_type == "color":
                     self.clean_color(key)
-                elif settings.STYLE_SCHEMA[key]["type"] == "number":
+                elif data_type == "number":
                     self.clean_number(key)
-                elif settings.STYLE_SCHEMA[key]["type"] == "rem":
+                elif data_type == "rem":
                     self.clean_rem(key)
-                elif settings.STYLE_SCHEMA[key]["type"] == "px":
+                elif data_type == "px":
                     self.clean_px(key)
         
         if app_settings.USE_SASS:
@@ -96,13 +97,13 @@ class StyleEditForm(forms.ModelForm):
         data = self.cleaned_data[key]
         try:
             # if it is a number, add rem to end of the string
-            number = float(data)
+            float(data)
             data += "rem"
             self.cleaned_data[key] = data
         except:
             try:
                 # else check if the string is a number followed by "rem"
-                value = float(data[:-3])
+                float(data[:-3])
                 if data[-3:] != "rem":
                     self.add_error(key, ValidationError("Please enter a valid rem value"))
             except:
@@ -113,13 +114,13 @@ class StyleEditForm(forms.ModelForm):
         data = self.cleaned_data[key]
         try:
             # if it is a number, add px to the end of the string
-            number = float(data)
+            float(data)
             data += "px"
             self.cleaned_data[key] = data
         except:
             try:
                 # else check if the string is a number followed by "px"
-                value = float(data[:-2])
+                float(data[:-2])
                 if not data[-2:] == "px":
                     self.add_error(key, ValidationError("Please enter a valid px value"))
             except:

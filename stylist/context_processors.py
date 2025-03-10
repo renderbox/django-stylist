@@ -8,8 +8,9 @@ def add_rgb_colors(css_attrs):
      ## adds rgb values for all colors
      for key, value in settings.STYLE_SCHEMA.items():
          if value['type'] == 'color':
-             hex = css_attrs[key].lstrip("#")
-             css_attrs[f"{key}-rgb"] = ",".join(tuple(str(int(hex[i:i+2], 16)) for i in (0, 2, 4)))
+             hex = css_attrs.get(key, "").lstrip("#")
+             if hex:
+                css_attrs[f"{key}-rgb"] = ",".join(tuple(str(int(hex[i:i+2], 16)) for i in (0, 2, 4)))
      return css_attrs
 
 def get_font_families(css_attrs):
@@ -17,7 +18,7 @@ def get_font_families(css_attrs):
     font_keys = [ key for key, value in settings.STYLE_SCHEMA.items() if value['type'] == 'font' ]
     font_import = ""
     for key in font_keys:
-        font_import += f"&family={css_attrs[key].replace(' ', '+')}:wght@100;200;300;400;500;600;700;800;900"
+        font_import += f"&family={css_attrs.get(key, '').replace(' ', '+')}:wght@100;200;300;400;500;600;700;800;900"
     return font_import
 
 # ---------------

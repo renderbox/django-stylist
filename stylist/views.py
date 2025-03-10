@@ -25,7 +25,7 @@ def build_scss(self, data = {}):
         for key in data:
             if key != "name":
                 string += "$" + key + ": " + data[key] + ";\n"
-                if settings.STYLE_SCHEMA[key]["type"] == "font":
+                if settings.STYLE_SCHEMA.get(key, "").get("type", "") == "font":
                     if num_fonts > 0:
                         google_fonts += "&family="
                     google_fonts += data[key].replace(" ", "+")

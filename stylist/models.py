@@ -79,7 +79,7 @@ class Style(models.Model):
             num_fonts = 0
             for key in self.attrs:
                 string += "$" + key + ": " + self.attrs[key] + ";\n"
-                if settings.STYLE_SCHEMA[key]["type"] == "font":
+                if settings.STYLE_SCHEMA.get(key, {}).get("type", "") == "font":
                     if num_fonts > 0:
                         google_fonts += "&family="
                     google_fonts += self.attrs[key].replace(" ", "+")

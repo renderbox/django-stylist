@@ -15,7 +15,11 @@ def create_style(request, serializer, name=None, attrs=None):
         site = request.site
     else:
         site = Site.objects.get_current()
-    instance = serializer.save(site=site, name=name, attrs=attrs)
+
+    if name and attrs:
+        instance = serializer.save(site=site, name=name, attrs=attrs)
+    else:
+        instance = serializer.save(site=site)
 
     if app_settings.USE_SASS:
         instance.compile_attrs()

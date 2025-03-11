@@ -45,7 +45,7 @@ setup(
     include_package_data=True,
     python_requires=">=3.6",
     install_requires=[
-        'Django>=3.0,<4.1',
+        'Django>=3.0',
         'django-autoslug',
     ],
     extras_require={
@@ -57,6 +57,7 @@ setup(
             'django-allauth',
             'django-extensions',
             'djangorestframework',
+            'requests',
         ],
         'test': ['libsass'],                         # Packages needed to run tests
         'prod': [],                         # Packages needed to run in the deployment

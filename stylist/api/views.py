@@ -1,5 +1,4 @@
 from django.contrib.sites.models import Site
-from django.shortcuts import redirect
 
 from rest_framework import viewsets, filters
 from rest_framework.generics import CreateAPIView
@@ -11,26 +10,31 @@ from stylist.api.serializers import StyleSerializer, FontSerializer
 from stylist.settings import app_settings
 
 
+def create_style(request, serializer, name=None, attrs=None):
+    if getattr(request, "site", None):
+        site = request.site
+    else:
+        site = Site.objects.get_current()
+
+    if name and attrs:
+        instance = serializer.save(site=site, name=name, attrs=attrs)
+    else:
+        instance = serializer.save(site=site)
+
+    if app_settings.USE_SASS:
+        instance.compile_attrs()
+
+    if not Style.objects.filter(site=site, enabled=True):
+        instance.enabled = True
+        instance.save()
+
+
 class StyleCreateAPIView(CreateAPIView):
      queryset = Style.objects.all()
      serializer_class = StyleSerializer
 
      def perform_create(self, serializer):
-          if getattr(self.request, "site", None):
-               site = self.request.site
-          else:
-               site = Site.objects.get_current()
-          instance = serializer.save(site=site)
-          if app_settings.USE_SASS:
-               instance.compile_attrs()
-
-          if not Style.objects.filter(site=site, enabled=True):
-               instance.enabled = True
-               instance.save()
-
-     def create(self, request, *args, **kwargs):
-          response = super().create(request, *args, **kwargs)
-          return redirect('stylist:stylist-index')
+        create_style(self.request, serializer)
 
 
 class StyleDuplicateAPIView(CreateAPIView):
@@ -38,23 +42,10 @@ class StyleDuplicateAPIView(CreateAPIView):
      serializer_class = StyleSerializer
 
      def perform_create(self, serializer):
-          previous = Style.objects.get(uuid=self.kwargs["uuid"])
-          if getattr(self.request, "site", None):
-               site = self.request.site
-          else:
-               site = Site.objects.get_current()
-          new_name = previous.name + " copy"
-          instance = serializer.save(site=site, attrs=previous.attrs, name=new_name)
-          if app_settings.USE_SASS:
-               instance.compile_attrs()
+        previous = Style.objects.get(uuid=self.kwargs["uuid"])
+        new_name = previous.name + " copy"
+        create_style(self.request, serializer, new_name, previous.attrs)
 
-          if not Style.objects.filter(site=site, enabled=True):
-               instance.enabled = True
-               instance.save()
-
-     def create(self, request, *args, **kwargs):
-          response = super().create(request, *args, **kwargs)
-          return redirect('stylist:stylist-index')
 
 class FontPagination(PageNumberPagination):
     page_size = 20
